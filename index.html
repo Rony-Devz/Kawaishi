@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e1116">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kawaishi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Kawaishi Ju-Jitsu</title>
+<style>
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#0e1116; --card:#171c24; --card2:#1e242e; --line:#2a323d; --line2:#3a4452;
+    --txt:#eef3f8; --muted:#93a1b2; --accent:#c6f24e; --gold:#e0a955; --good:#5b9cff; --bad:#e6564f;
+    --judo:#9fce6f; --selfdef:#e0895f; --atemi:#d98a97; --bjj:#a98be0;
+    --jp:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",Georgia,serif;
+    --sans:"Assistant",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    --s2:8px; --s3:12px; --s4:16px; --r1:12px; --r2:16px; --r3:20px;
+  }
+  body{background:#05070a; color:var(--txt); font-family:var(--sans); min-height:100vh; display:flex; justify-content:center;
+    padding:env(safe-area-inset-top) 0 0;}
+  @media(min-width:480px){ body{padding:18px 0;} }
+  .app{width:100%; max-width:430px; height:100vh; height:100dvh; position:relative; display:flex; flex-direction:column; background:var(--bg); overflow:hidden; border:1px solid #1a1f27;}
+  @media(min-width:480px){ .app{height:calc(100vh - 36px); height:calc(100dvh - 36px); border-radius:26px; box-shadow:0 24px 70px rgba(0,0,0,.6);} }
+  .jpf{font-family:var(--jp);}
+
+  header{position:sticky; top:0; z-index:20; padding:16px 16px 10px; background:linear-gradient(180deg,#12161d,rgba(14,17,22,.92)); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .hrow{display:flex; align-items:center; justify-content:space-between;}
+  .brand{font-size:15px; font-weight:800;} .brand .jp{font-family:var(--jp); font-weight:600;}
+  .beltpill{font-size:12px; font-weight:800; color:var(--accent); background:rgba(198,242,78,.12); border:1px solid rgba(198,242,78,.4); border-radius:999px; padding:5px 11px; cursor:pointer;}
+  .beltmenu{position:absolute; top:50px; inset-inline-end:14px; z-index:45; background:var(--card2); border:1px solid var(--line2); border-radius:14px; padding:6px; min-width:186px; box-shadow:0 14px 34px rgba(0,0,0,.55); display:none; animation:fade .14s ease;}
+  .beltmenu.open{display:block;}
+  .beltmenu .mh{font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); font-weight:800; padding:6px 10px 8px;}
+  .bmi{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; cursor:pointer; font-size:14px; font-weight:700;}
+  .bmi:active{background:rgba(255,255,255,.06);}
+  .bmi.cur{background:rgba(198,242,78,.10); box-shadow:inset 0 0 0 1px rgba(198,242,78,.35);}
+  .bmi .cdot{width:15px;height:15px;border-radius:50%; border:1px solid rgba(255,255,255,.25); flex:0 0 auto;}
+  .bmi .en{color:var(--muted); font-weight:600; font-size:12px; margin-inline-start:auto; direction:ltr;}
+  .bmi .ck{color:var(--accent); font-weight:900;}
+  .htitle{font-size:21px; font-weight:800; margin-top:8px;}
+  .hsub{font-size:12px; color:var(--muted); margin-top:2px;}
+
+  main{flex:1; min-height:0; overflow-y:auto; padding:14px 16px 96px;}
+  .view{display:none; animation:fade .18s ease;} .view.on{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important;} }
+  .sec{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); font-weight:800; margin:22px 2px 12px; display:flex; align-items:center; gap:8px;}
+  .sec .pd{width:8px;height:8px;border-radius:50%; background:var(--accent);}
+  .dots{display:inline-flex; gap:3px;} .dot{width:7px;height:7px;border-radius:50%; background:var(--line2);} .dot.on{background:var(--accent);}
+  .imgph{width:100%;height:100%;object-fit:contain;display:block;}
+
+  /* syllabus quicklink */
+  .syllabtn{display:flex; align-items:center; gap:10px; width:100%; background:var(--card); border:1px solid var(--line); border-radius:var(--r1); padding:11px 14px; color:var(--txt); font-weight:700; font-size:13px; cursor:pointer; margin-bottom:14px;}
+  .syllabtn svg{width:18px;height:18px; stroke:var(--gold); fill:none; stroke-width:1.8;}
+  .syllabtn .ar{margin-inline-start:auto; color:var(--muted);}
+
+  /* ---------- TRAIN ---------- */
+  .weekstrip{display:flex; gap:5px; margin-bottom:14px;}
+  .wd{flex:1; text-align:center; background:var(--card); border:1px solid var(--line); border-radius:9px; padding:7px 2px; cursor:pointer;}
+  .wd.today{border-color:var(--accent); background:rgba(198,242,78,.10);}
+  .wd.sel{box-shadow:inset 0 0 0 1px var(--gold);}
+  .wd .d{font-size:13px; font-weight:800;} .wd.today .d{color:var(--accent);}
+  .wd .fx{font-size:8.5px; margin-top:3px; color:var(--muted); line-height:1.1;}
+  .session{position:relative; overflow:hidden; background:linear-gradient(155deg,#20272f,#141a21); border:1px solid var(--line2); border-radius:var(--r3); padding:20px;}
+  .session::before{content:""; position:absolute; inset:0; background:radial-gradient(360px 160px at 90% -20%, rgba(198,242,78,.16), transparent 65%); pointer-events:none;}
+  .session .lbl{font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); font-weight:800;}
+  .session .stt{font-size:26px; font-weight:800; margin-top:6px;}
+  .session .meta{font-size:13px; color:var(--muted); margin-top:8px;} .session .meta b{color:var(--txt);}
+  .plan{display:flex; gap:8px; margin-top:14px;}
+  .plan .step{flex:1; background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:10px; padding:9px; text-align:center;}
+  .plan .step .sn{width:20px;height:20px;border-radius:50%; background:var(--card2); border:1px solid var(--line2); color:var(--muted); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 5px;}
+  .plan .step .st{font-size:11px; font-weight:800;} .plan .step .ss{font-size:10px; color:var(--muted);}
+  .cta{width:100%; margin-top:16px; background:var(--accent); color:#0e1116; border:none; border-radius:var(--r1); padding:16px; font-weight:800; font-size:16px; cursor:pointer; transition:transform .06s; font-family:var(--sans);}
+  .cta:active{transform:translateY(1px);}
+  .subbtn{width:100%; margin-top:10px; background:transparent; border:1px solid var(--line2); color:var(--txt); border-radius:var(--r1); padding:12px; font-weight:700; font-size:13px; cursor:pointer; font-family:var(--sans); display:flex; align-items:center; justify-content:center; gap:8px;}
+  .subbtn:active{background:rgba(255,255,255,.04);}
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
+  .modecard{background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:14px; cursor:pointer; transition:border-color .12s;}
+  .modecard:active{border-color:var(--accent);}
+  .modecard.free{border-inline-start:3px solid var(--gold);}
+  .modecard .mt{font-size:14px; font-weight:800;} .modecard .ms{font-size:11px; color:var(--muted); margin-top:3px; line-height:1.35;}
+  .week{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:14px; margin-top:12px;}
+  .week .bars{display:flex; gap:5px; flex:1;} .week .bar{flex:1; height:22px; border-radius:5px; background:var(--line);} .week .bar.on{background:var(--accent);}
+  .week .wt{font-size:12px; color:var(--muted); font-weight:800; white-space:nowrap;}
+  .focus{background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:4px 14px;}
+  .frow{display:flex; align-items:center; gap:10px; padding:12px 0; border-bottom:1px solid var(--line); cursor:pointer;}
+  .frow:last-child{border-bottom:none;}
+  .tag{font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; border-radius:5px; padding:2px 7px; white-space:nowrap;}
+  .tag.weak{color:#f6c1c6; background:rgba(230,57,70,.16); border:1px solid var(--bad);}
+  .tag.new{color:var(--gold); background:rgba(224,169,85,.14); border:1px solid var(--gold);}
+  .frow .fn{flex:1; font-size:15px; font-weight:700; font-family:var(--jp);} .frow .fn small{display:block; color:var(--muted); font-weight:500; font-size:11px; font-family:var(--sans);}
+  .empty{color:var(--muted); font-size:13px; text-align:center; padding:16px;}
+
+  /* ---------- LIBRARY ---------- */
+  .search{display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line2); border-radius:var(--r2); padding:13px 14px; margin-bottom:12px; color:var(--txt); font-size:14px;}
+  .search svg{width:18px;height:18px; stroke:var(--muted); fill:none; stroke-width:2;}
+  .search input{flex:1; background:none; border:none; outline:none; color:var(--txt); font-family:var(--sans); font-size:14px;}
+  .search input::placeholder{color:var(--muted);}
+  .filters{display:flex; gap:7px; overflow-x:auto; padding-bottom:4px;} .filters::-webkit-scrollbar{display:none;}
+  .fchip{flex:0 0 auto; background:var(--card); border:1px solid var(--line); color:var(--txt); border-radius:999px; padding:7px 13px; font-size:12.5px; font-weight:700; cursor:pointer;}
+  .fchip.on{background:rgba(198,242,78,.12); border-color:var(--accent); color:var(--accent);}
+  .cat{margin-top:18px;}
+  .cathead{display:flex; align-items:baseline; justify-content:space-between; margin:0 2px 10px;}
+  .cathead .ct{font-size:15px; font-weight:800;} .cathead .ct .jp{font-family:var(--jp); color:var(--muted); font-weight:500; font-size:12px; margin-inline-start:5px;}
+  .cathead .cc{font-size:12px; color:var(--muted); font-weight:700; direction:ltr;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+  .tcard{background:var(--card); border:1px solid var(--line); border-radius:var(--r1); padding:8px; text-align:center; cursor:pointer; transition:transform .06s, border-color .12s;}
+  .tcard:active{transform:translateY(1px); border-color:var(--accent);}
+  .tcard .img{width:100%; aspect-ratio:1; background:#f5f5ef; border-radius:9px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:6px;}
+  .tcard .img svg{width:76%;height:76%;}
+  .tcard .img{position:relative;}
+  .tcard .img.seriesnum{background:rgba(198,242,78,.14); color:var(--accent); font-family:var(--jp); font-weight:800; font-size:26px;}
+  .zoombtn{position:absolute; top:5px; inset-inline-end:5px; width:24px; height:24px; border-radius:7px; background:rgba(11,14,19,.72); color:#fff; border:none; font-size:13px; line-height:1; cursor:zoom-in; display:flex; align-items:center; justify-content:center; padding:0;}
+  .tcard.noimg{display:flex; flex-direction:column; justify-content:center; min-height:76px;}
+  .tcard .cr{font-size:12px; font-weight:800; line-height:1.15;} .tcard .ch{font-size:10px; color:var(--muted); margin-top:1px; font-family:var(--jp);}
+
+  /* ---------- PROGRESS ---------- */
+  .scope{display:flex; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:3px; gap:3px; margin-bottom:14px;}
+  .scope button{flex:1; background:none; border:none; color:var(--muted); font-weight:800; font-size:13px; padding:10px; border-radius:999px; cursor:pointer; font-family:var(--sans);}
+  .scope button.on{background:rgba(198,242,78,.12); color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent);}
+  .hero{display:flex; align-items:center; gap:16px; background:linear-gradient(155deg,var(--card2),var(--card)); border:1px solid var(--line); border-radius:var(--r3); padding:18px;}
+  .ring{position:relative; width:96px;height:96px; flex:0 0 auto;} .ring svg{transform:rotate(-90deg);}
+  .ring .c{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .ring .p{font-size:23px; font-weight:800;} .ring .l{font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted);}
+  .hero .hb{font-size:20px; font-weight:800;} .hero .hb .he{color:var(--muted); font-size:14px; font-weight:600;}
+  .hero .hs{font-size:12px; color:var(--muted); margin-top:6px;}
+  .pillbars{margin-top:6px;}
+  .pbar{margin-bottom:12px;}
+  .pbar .pl{display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; margin-bottom:5px;} .pbar .pl .pv{color:var(--muted); font-weight:600; direction:ltr;}
+  .pbar .track{height:9px; border-radius:99px; background:var(--line); overflow:hidden;} .pbar .track i{display:block; height:100%; border-radius:99px;}
+  .track2{display:flex; align-items:center; justify-content:space-between; margin:4px 4px;}
+  .bnode{display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; position:relative;}
+  .bnode::before{content:""; position:absolute; top:11px; inset-inline-end:-50%; width:100%; height:2px; background:var(--line2); z-index:0;}
+  .bnode:first-child::before{display:none;}
+  .bdot{width:22px;height:22px;border-radius:50%; border:2px solid var(--line2); background:var(--bg); z-index:1;}
+  .bnode.cur .bdot{box-shadow:0 0 0 3px rgba(224,169,85,.2); border-color:var(--gold);}
+  .bnode .bl{font-size:9px; color:var(--muted); font-weight:700;}
+  .creq{background:var(--card); border:1px solid var(--line); border-inline-start:3px solid var(--judo); border-radius:var(--r1); margin-bottom:9px; overflow:hidden;}
+  .creq .rh{display:flex; align-items:center; gap:10px; padding:13px 14px; cursor:pointer;}
+  .creq .rh .tw{color:var(--muted); font-size:12px; transition:transform .15s;} .creq.open .rh .tw{transform:rotate(90deg);}
+  .creq .rh .nm{flex:1;} .creq .rh .nm b{font-size:14.5px;} .creq .rh .nm small{display:block; color:var(--muted); font-size:12px; direction:ltr;}
+  .creq .rh .cnt{font-size:12px; color:var(--muted); font-weight:700; direction:ltr;} .creq .rh .cnt b{color:var(--accent);}
+  .creq .rb{display:none; padding:0 14px 12px;} .creq.open .rb{display:block;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px;}
+  .kchip{display:inline-flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:6px 11px 6px 8px; font-size:12px; cursor:pointer;}
+  .kchip.done{background:rgba(198,242,78,.10); border-color:var(--accent);}
+  .note{color:var(--muted); font-size:12px; line-height:1.5; padding:2px 0 4px;}
+  .badges{display:flex; flex-wrap:wrap; gap:9px;}
+  .badge{display:flex; flex-direction:column; align-items:center; gap:6px; width:74px; background:var(--card); border:1px solid var(--line); border-radius:var(--r1); padding:12px 4px;}
+  .badge.lock{opacity:.38;} .badge .bi{width:30px;height:30px;border-radius:50%; background:rgba(224,169,85,.14); border:1px solid var(--gold); display:flex;align-items:center;justify-content:center;}
+  .badge .bi svg{width:16px;height:16px; stroke:var(--gold); fill:none; stroke-width:1.8;} .badge .bn{font-size:9px; color:var(--muted); text-align:center; font-weight:700; line-height:1.2;}
+  .setrow{display:flex; align-items:center; justify-content:space-between; background:var(--card); border:1px solid var(--line); border-radius:var(--r1); padding:13px 14px; margin-bottom:8px; font-size:14px; font-weight:600; cursor:pointer;}
+  .setrow .v{color:var(--muted); font-size:13px;}
+
+  /* ---------- bottom nav (3 tabs) ---------- */
+  nav.tabbar{position:absolute; inset-inline:0; bottom:0; z-index:30; display:flex; justify-content:space-around; padding:9px 6px calc(14px + env(safe-area-inset-bottom)); background:#0b0e13; border-top:1px solid var(--line);}
+  nav.tabbar button{flex:1; background:none; border:none; cursor:pointer; color:var(--muted); display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px; font-weight:800; font-family:var(--sans);}
+  nav.tabbar svg{width:23px;height:23px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+  nav.tabbar button.active{color:var(--accent);}
+
+  /* ---------- detail sheet ---------- */
+  .modal{position:absolute; inset:0; z-index:50; background:rgba(5,7,10,.74); display:none; align-items:flex-start;}
+  .modal.open{display:flex;}
+  .sheet{width:100%; background:var(--card); border-bottom:1px solid var(--line2); border-radius:0 0 var(--r3) var(--r3); max-height:100%; overflow-y:auto; padding:16px 18px 28px; animation:down .22s ease;}
+  @keyframes down{from{transform:translateY(-28px);opacity:.6;}to{transform:none;opacity:1;}}
+  .closex{position:sticky; top:0; float:inline-end; z-index:6; background:var(--card); border:1.5px solid var(--line2); color:var(--txt); width:38px;height:38px;border-radius:50%; cursor:pointer; font-size:20px;}
+  .dethero{background:#f5f5ef; border-radius:var(--r2); padding:16px; margin:6px 0 14px; text-align:center;} .dethero svg{width:58%; max-width:170px;} .dethero img{width:100%; max-width:230px; border-radius:8px;}
+  /* detail hero = JP-first (identity) */
+  .kj{font-family:var(--jp); font-size:26px; font-weight:700;} .romaji{font-family:var(--jp); font-size:16px; color:var(--muted); margin-top:2px;} .hb2{font-size:19px; font-weight:800; margin-top:10px;} .enb{color:var(--muted); font-size:13px; margin-top:2px; direction:ltr;}
+  .vid{margin-top:12px; border-radius:var(--r2); overflow:hidden; background:#0b0e13; border:1px solid var(--line);}
+  .vid iframe{width:100%; aspect-ratio:16/9; border:0; display:block;}
+  .sheet ol{margin:14px 0 0; padding-inline-start:20px;} .sheet ol li{margin-bottom:6px; font-size:14px;}
+  .masterrow{display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; align-items:center;} .masterrow .lbl{width:100%; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--muted);}
+  .mlvl{display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700;}
+  .mhint{width:100%; color:var(--muted); font-size:11px; margin-top:2px;}
+  .metatags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .mtag{font-size:10px; font-weight:700; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:2px 7px;}
+
+  /* what's-new popup */
+  .wnhead{font-size:24px; font-weight:800; margin-top:4px;}
+  .wnlist{margin:16px 0 4px;}
+  .wnrow{display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--line);}
+  .wnrow:last-child{border-bottom:none;}
+  .wnic{font-size:22px; line-height:1.2; flex:0 0 auto;}
+  .wntx b{font-size:15px; font-weight:800; display:block;} .wntx small{color:var(--muted); font-size:12.5px; line-height:1.4;}
+
+  /* tap-to-enlarge illustrations */
+  .dethero, .sov-hero, .revealbox, .sethumb{position:relative; cursor:zoom-in;}
+  .dethero::after, .sov-hero::after, .revealbox::after{content:"⤢"; position:absolute; top:8px; inset-inline-end:8px; width:24px; height:24px; border-radius:7px; background:rgba(11,14,19,.72); color:#fff; font-size:14px; display:flex; align-items:center; justify-content:center; pointer-events:none;}
+  .lightbox{position:fixed; inset:0; z-index:200; background:rgba(5,7,10,.95); display:none; align-items:center; justify-content:center; padding:20px;}
+  .lightbox.on{display:flex;}
+  .lightbox img{width:min(92vw,640px); max-height:86vh; height:auto; object-fit:contain; border-radius:14px; background:#f5f5ef; padding:14px;}
+  .lightbox .lbx{position:absolute; top:16px; inset-inline-end:16px; width:44px; height:44px; border-radius:50%; background:rgba(238,243,249,.14); border:1.5px solid var(--line2); color:var(--txt); font-size:23px; cursor:pointer;}
+
+  /* series detail list */
+  .selist{margin:14px 0 4px; display:flex; flex-direction:column; gap:8px;}
+  .serow{display:flex; align-items:center; gap:12px; background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:8px 12px; direction:rtl;}
+  .setx b, .setx small{text-align:start;}
+  .senum{flex:0 0 auto; width:24px; height:24px; border-radius:50%; background:rgba(198,242,78,.14); color:var(--accent); font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .sethumb{flex:0 0 auto; width:52px; height:52px; border-radius:9px; background:#f5f5ef; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+  .sethumb img{width:100%; height:100%; object-fit:contain;}
+  .setx{flex:1; min-width:0;}
+  .setx b{display:block; font-size:14.5px; font-weight:800; line-height:1.25;}
+  .setx small{color:var(--muted); font-size:12px; display:block; margin-top:1px;}
+  .serow-btn{width:100%; text-align:start; cursor:pointer; font-family:var(--sans); color:var(--txt); transition:transform .06s, border-color .12s;}
+  .serow-btn:active{transform:translateY(1px);} .serow-btn:hover{border-color:var(--line2);}
+  .cthumb{flex:0 0 auto; width:52px; height:52px; border-radius:9px; background:#f5f5ef; overflow:hidden; display:flex; align-items:center; justify-content:center;}
+  .cthumb img{width:100%; height:100%; object-fit:contain;}
+
+  /* syllabus matrix sheet */
+  .syntable{width:100%; border-collapse:collapse; font-size:12px; direction:rtl;}
+  .syntable th,.syntable td{border:1px solid var(--line); padding:6px 5px; text-align:center;}
+  .syntable th{font-size:11px; color:var(--muted);}
+  .syntable td.cat{text-align:start; font-weight:700;}
+  .syntable td.cat small{display:block; color:var(--muted); font-weight:500; direction:ltr;}
+  .syntable .cur{background:rgba(198,242,78,.10);}
+  .synscroll{overflow-x:auto; margin-top:12px;}
+
+  /* ---------- session overlay ---------- */
+  .session-ov{position:absolute; inset:0; z-index:60; background:var(--bg); display:none; flex-direction:column;}
+  .session-ov.on{display:flex;}
+  .sov-top{display:flex; align-items:center; gap:12px; padding:16px 16px 6px;}
+  .sov-top .x{background:none; border:none; color:var(--muted); font-size:26px; cursor:pointer; line-height:1;}
+  .sov-prog{flex:1; height:8px; background:var(--line); border-radius:99px; overflow:hidden;}
+  .sov-prog i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease; width:0;}
+  .sov-count{font-size:12px; color:var(--muted); font-weight:700; white-space:nowrap; direction:ltr;}
+  .stepper{display:flex; gap:6px; padding:0 16px 6px;}
+  .stepper .sp{flex:1; display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:800; color:var(--muted);}
+  .stepper .sp .n{width:18px;height:18px;border-radius:50%; border:1px solid var(--line2); display:flex; align-items:center; justify-content:center; font-size:10px;}
+  .stepper .sp.on{color:var(--accent);} .stepper .sp.on .n{border-color:var(--accent); background:rgba(198,242,78,.12);}
+  .stepper .sp.done .n{border-color:var(--good); background:var(--good); color:#fff;}
+  .difpill{margin:0 16px 4px; align-self:flex-start; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; border-radius:6px; padding:3px 9px;}
+  .difpill.d0{color:var(--good); background:rgba(91,156,255,.14); border:1px solid var(--good);}
+  .difpill.d1{color:var(--gold); background:rgba(224,169,85,.14); border:1px solid var(--gold);}
+  .difpill.d2{color:#f6c1c6; background:rgba(230,57,70,.16); border:1px solid var(--bad);}
+  .sov-body{flex:1; min-height:0; display:flex; flex-direction:column; padding:6px 16px; overflow-y:auto;}
+  .sov-foot{padding:10px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--bg); border-top:1px solid var(--line);}
+  .sov-foot:empty{display:none;}
+  .sov-foot .cta{margin-top:0;}
+  .sov-q{font-size:12px; letter-spacing:.5px; color:var(--muted); font-weight:800; text-align:center; margin-bottom:10px;}
+  .sov-hero{background:#f5f5ef; border-radius:var(--r3); padding:18px; margin:0 auto 14px; width:100%; max-width:250px; text-align:center;} .sov-hero svg{width:70%; max-width:160px;} .sov-hero img{width:100%; max-width:200px; border-radius:8px;}
+  .sov-heroname{font-family:var(--jp); font-size:22px; font-weight:700; text-align:center; margin:6px 0 14px;}
+  .opts{display:flex; flex-direction:column; gap:10px;}
+  .opt{background:var(--card); border:1px solid var(--line2); color:var(--txt); border-radius:var(--r1); padding:13px 15px; cursor:pointer; text-align:center; transition:transform .06s; font-family:var(--sans);}
+  .opt:active{transform:translateY(1px);}
+  .opt .om{font-size:16px; font-weight:800;} .opt .om.jp{font-family:var(--jp); font-weight:700;} .opt .osub{font-size:11px; color:var(--muted); margin-top:2px; direction:ltr;}
+  .sov-heroname{font-family:var(--jp);}
+  .opt.correct{background:rgba(198,242,78,.16); border-color:var(--accent);}
+  .opt.wrong{background:rgba(230,86,79,.16); border-color:var(--bad);}
+  .opt.dim{opacity:.4;}
+  .revealbtn{margin-top:14px; width:100%; background:transparent; border:1px dashed var(--line2); color:var(--muted); border-radius:var(--r1); padding:12px; font-weight:700; font-size:13px; cursor:pointer; font-family:var(--sans);}
+  .revealbox{margin-top:12px; background:#f5f5ef; border-radius:var(--r2); padding:14px; text-align:center;} .revealbox svg{width:52%; max-width:150px;} .revealbox img{width:100%; max-width:200px; border-radius:8px;}
+  /* order-the-series step */
+  .slots{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
+  .slot{display:flex; align-items:center; gap:10px; min-height:52px; background:var(--bg); border:1px dashed var(--line2); border-radius:10px; padding:6px 10px;}
+  .slot.filled{border-style:solid; border-color:var(--line2); background:var(--card);}
+  .slot.correct{border-color:var(--accent); background:rgba(198,242,78,.10);}
+  .slot.wrong{border-color:var(--bad); background:rgba(230,86,79,.10);}
+  .slot .sn{width:22px;height:22px;border-radius:50%; background:var(--card2); color:var(--muted); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+  .slot .sph{color:var(--muted); font-size:12px; font-style:italic;}
+  .slot .snm{font-weight:800; font-size:14px;} .slot .snm small{color:var(--muted); font-weight:500; font-family:var(--jp); margin-inline-start:6px;}
+  .pimg{width:34px;height:34px;background:#f5f5ef;border-radius:6px;padding:2px;flex:0 0 auto;} .pimg svg{width:100%;height:100%;} .pimg img{width:100%;height:100%;object-fit:contain;}
+  .pool{display:flex; flex-wrap:wrap; gap:8px;}
+  .pcard{display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line2); border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer;}
+  .pcard.used{opacity:.3; pointer-events:none;}
+  /* shadow training */
+  .shadowcard{background:var(--card2); border:1px solid var(--line2); border-radius:var(--r2); padding:18px; margin-bottom:14px;}
+  .shadowcard .shname{font-size:22px; font-weight:800;} .shadowcard .shname small{display:block; font-family:var(--jp); color:var(--muted); font-weight:500; font-size:13px; margin-top:3px;}
+  .shsteps{margin:14px 20px 0; padding:0; line-height:1.65;} .shsteps li{margin-bottom:8px; font-size:15px;}
+  .shen{color:var(--muted); font-size:12px; margin-top:14px; direction:ltr;}
+  /* done */
+  .sov-done{text-align:center; padding:36px 24px;}
+  .sov-done .big{font-family:var(--jp); font-size:44px; color:var(--accent);}
+  .sov-done h2{font-size:24px; font-weight:800; margin:10px 0 6px;} .sov-done p{color:var(--muted); font-size:14px; line-height:1.6;}
+  .sov-done .row{display:flex; justify-content:center; gap:22px; margin-top:18px;} .sov-done .row .n{font-size:26px; font-weight:900;} .sov-done .row .n.a{color:var(--accent);} .sov-done .row .l{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="hrow"><div class="brand">Kawaishi <span class="jp">柔術</span></div><div class="beltpill" id="beltpill">Green · ירוקה ▾</div></div>
+    <div class="beltmenu" id="beltmenu"><div class="mh">בחר חגורה · Select belt</div></div>
+    <div class="htitle" id="htitle">ערב טוב 👋</div>
+    <div class="hsub" id="hsub">בוא נתאמן — חמש דקות והשתפרת</div>
+  </header>
+
+  <main>
+    <!-- ===== TRAIN ===== -->
+    <section class="view on" data-view="train">
+      <button class="syllabtn" id="syllTrain">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg> טבלת הסילבוס · Syllabus <span class="ar">›</span>
+      </button>
+
+      <div class="weekstrip" id="weekstrip"></div>
+
+      <div class="session">
+        <div class="lbl" id="sessLbl">אימון היום</div>
+        <div class="stt" id="sessTitle">—</div>
+        <div class="meta" id="sessMeta"></div>
+        <div class="plan" id="sessPlan"></div>
+        <button class="cta" id="startBtn">התחל אימון היום ◂</button>
+      </div>
+
+      <button class="subbtn" id="editWeek"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg> ערוך תוכנית שבועית</button>
+
+      <div class="split">
+        <div class="modecard free" id="trainAll">
+          <div class="mt">תרגול כולל</div>
+          <div class="ms">חזרה חכמה על כל חומר הסילבוס — רק טכניקות עם איור/וידאו</div>
+        </div>
+        <div class="modecard" id="trainWeak">
+          <div class="mt">נקודות חולשה</div>
+          <div class="ms">קודם מה שאתה יודע פחות</div>
+        </div>
+      </div>
+
+      <div class="modecard free" id="trainShadow" style="margin-top:10px; border-inline-start-color:var(--selfdef)">
+        <div class="mt">אימון צל · Shadow training</div>
+        <div class="ms">קרא ובצע — הגנה עצמית שלב-אחר-שלב, ללא איורים</div>
+      </div>
+
+      <div class="modecard free" id="trainSeries" style="margin-top:10px; border-inline-start-color:var(--accent)">
+        <div class="mt">סדר סדרה · Order series</div>
+        <div class="ms">סדר טכניקות של סדרה לפי הסדר הנכון</div>
+      </div>
+
+      <div class="week">
+        <div class="bars" id="weekBars"></div>
+        <div class="wt" id="weekWt"></div>
+      </div>
+
+      <div class="sec"><span class="pd"></span>מוקדי מיקוד · Focus areas</div>
+      <div class="focus" id="focusList"></div>
+    </section>
+
+    <!-- ===== LIBRARY ===== -->
+    <section class="view" data-view="library">
+      <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input id="libSearch" placeholder="חיפוש טכניקות…"></div>
+      <div class="filters" id="libFilters"></div>
+      <button class="syllabtn" id="syllLib" style="margin-top:12px">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg> פתח את טבלת הסילבוס המלאה <span class="ar">›</span>
+      </button>
+      <div id="libGroups"></div>
+    </section>
+
+    <!-- ===== PROGRESS ===== -->
+    <section class="view" data-view="progress">
+      <div class="scope" id="progScope"><button class="on" data-scope="belt">לפי חגורה · By belt</button><button data-scope="all">כללי · All</button></div>
+
+      <!-- BY BELT -->
+      <div id="scopeBelt">
+        <div class="hero">
+          <div class="ring">
+            <svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="42" stroke="#2a323d" stroke-width="8" fill="none"/><circle id="pring" cx="48" cy="48" r="42" stroke="var(--accent)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" style="transition:stroke-dashoffset .9s ease;"/></svg>
+            <div class="c"><div class="p" id="pringP">0%</div><div class="l">מוכן</div></div>
+          </div>
+          <div><div class="hb" id="beltHeroName">—</div><div class="hs" id="beltHeroSub">—</div></div>
+        </div>
+        <div class="sec"><span class="pd"></span>דרישות החגורה · Requirements <button id="toMatrix" style="margin-inline-start:auto; background:none;border:none;color:var(--accent);font-weight:700;font-size:11px;cursor:pointer;">טבלה מלאה ›</button></div>
+        <div id="reqList"></div>
+      </div>
+
+      <!-- ALL -->
+      <div id="scopeAll" style="display:none;">
+        <div class="hero">
+          <div class="ring">
+            <svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="42" stroke="#2a323d" stroke-width="8" fill="none"/><circle id="aring" cx="48" cy="48" r="42" stroke="var(--gold)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" style="transition:stroke-dashoffset .9s ease;"/></svg>
+            <div class="c"><div class="p" id="aringP">0%</div><div class="l">שליטה</div></div>
+          </div>
+          <div><div class="hb">כל החומר <span class="he">· All</span></div><div class="hs" id="allHeroSub">—</div></div>
+        </div>
+        <div class="sec"><span class="pd"></span>שליטה לפי פילר · By pillar</div>
+        <div class="pillbars" id="pillbars"></div>
+        <button class="cta" style="margin-top:4px" id="trainAll2">תרגול כולל ◂</button>
+      </div>
+
+      <div class="sec"><span class="pd"></span>מסע החגורות · Belt journey</div>
+      <div class="track2" id="track"></div>
+
+      <div class="sec"><span class="pd"></span>הישגים · Achievements</div>
+      <div class="badges" id="badges"></div>
+
+      <div class="sec"><span class="pd"></span>הגדרות · Settings</div>
+      <div class="setrow" id="setWeekly">תוכנית שבועית · Weekly plan <span class="v">ערוך ›</span></div>
+      <div class="setrow" id="setBelt">החגורה שלי · My belt <span class="v" id="setBeltV">Green ▾</span></div>
+      <div class="setrow" id="setReset" style="color:var(--bad)">איפוס התקדמות · Reset <span class="v" style="color:var(--bad)">›</span></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-view="train" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>אימון</button>
+    <button data-view="library"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>ספרייה</button>
+    <button data-view="progress"><svg viewBox="0 0 24 24"><path d="M4 20l4-9 4 5 4-11 4 15"/></svg>התקדמות</button>
+  </nav>
+
+  <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+  <div class="session-ov" id="sessionOv"></div>
+  <div class="lightbox" id="lightbox"><button class="lbx" id="lightboxClose" aria-label="close">×</button><img id="lightboxImg" alt=""></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+/* ============================================================================
+   Kawaishi Ju-Jitsu — "Coach" UI (faithful port of the approved prototype v3),
+   wired to REAL data (window.KAWAISHI / data.js) with persistent progress.
+   ========================================================================== */
+const K = window.KAWAISHI;
+const ORDER = K.order;
+const BELT_HEX = { yellow:"#f4d03f", orange:"#e67e22", green:"#27ae60", blue:"#3d7bf4", brown:"#8f6f4f", black:"#2b2b2b" };
+const BELT_HE = {}; K.belts.forEach(b=>BELT_HE[b.id]=b.he);
+const PILLAR_C = { judo:"var(--judo)", selfdef:"var(--selfdef)", atemi:"var(--atemi)", bjj:"var(--bjj)", fundamentals:"var(--good)", randori:"var(--gold)" };
+const MASTERY_HE = ["—","מכיר","מבצע","שולט"];
+const MAX_M = 3;
+const $ = s=>document.querySelector(s);
+const cap = s=> s? s[0].toUpperCase()+s.slice(1) : s;
+const shuffle = a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const dots = (m,n=3)=>`<span class="dots">${Array.from({length:n},(_,i)=>`<span class="dot ${m>=i+1?'on':''}"></span>`).join("")}</span>`;
+/* ---- data indexes ---- */
+const judoById = {}; K.techniques.judo.forEach(t=>judoById[t.id]=t);
+const atemiById = {}; (K.techniques.atemi||[]).forEach(t=>atemiById[t.id]=t);
+const techById = {};
+[...K.techniques.judo, ...(K.techniques.atemi||[])].forEach(t=>techById[t.id]=t);
+(K.bjj&&K.bjj.items||[]).forEach(t=>{ if(t.id&&!techById[t.id]) techById[t.id]=t; });
+(K.selfdefCatalog&&K.selfdefCatalog.techniques||[]).forEach(t=>{ if(t.id&&!techById[t.id]) techById[t.id]=t; });
+const NAMED_JUDO = [...K.techniques.judo, ...(K.techniques.atemi||[])].map(t=>t.id);
+
+function nameR(id){ const t=techById[id]; return t ? (t.r||t.romaji||t.id) : id; }
+function nameHe(id){ const t=techById[id]; return t ? (t.he||"") : ""; }
+function illusSrc(t){ const s=t&&t.illus; return (s && s.indexOf("img/")===0) ? s : null; }
+function illusFor(t){ const own=illusSrc(t); if(own) return own; const refId=t&&t.ref; if(refId&&techById[refId]) return illusSrc(techById[refId]); return null; }
+function heroImg(t, cls){ const src=t&&illusFor(t); return src ? `<img class="${cls||''}" src="${src}" alt="">` : ""; }
+function isVariant(t){ // variants/henkawaza are series-only, never standalone quiz items
+  if(!t) return false;
+  const he=t.he||"", en=t.en||"", r=(t.r||"")+" "+(t.r_src||"");
+  return /\u05d5\u05e8\u05d9\u05d0\u05e6\u05d9|\u05d7\u05dc\u05d5\u05e4\u05d9\u05ea/.test(he) || /\bvariant\b|\bvariation\b/i.test(en) || /henka/i.test(r);
+}
+function beltIndex(b){ return ORDER.indexOf(b); }
+function beltRank(id){ const t=techById[id]; const belt=t&&(t.schoolBelt||t.belt); const r=belt?ORDER.indexOf(belt):-1; return r<0?99:r; }
+function ytEmbed(id){ return `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1" title="video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`; }
+
+/* ---- state (persisted) ---- */
+const LS = "kawaishi_progress_v1";
+const WHATS_NEW_VERSION = "2026-07-coach-2";
+function load(){ try{ return JSON.parse(localStorage.getItem(LS)) || {}; }catch(e){ return {}; } }
+function save(){ localStorage.setItem(LS, JSON.stringify(S)); }
+let S = load();
+S.currentBelt = S.currentBelt || "green";
+if(!BELT_HE[S.currentBelt]) S.currentBelt = ORDER[0];
+S.mastery = S.mastery || {};
+S.xp = S.xp || 0;
+S.streak = S.streak || 0;
+let currentBelt = S.currentBelt;
+
+/* ---- readiness / pools ---- */
+function beltPoolIds(belt){ const ids=[]; for(const r of K.requirements){ const res=K.resolved[r.key]; if(res&&res.perBelt[belt]) ids.push(...res.perBelt[belt].cumulative); } return [...new Set(ids)]; }
+function sdCumIds(belt){ const sd=(K.selfdefCurric&&K.selfdefCurric.resolved)||{}; const ids=[]; for(const key in sd){ const pb=sd[key].perBelt&&sd[key].perBelt[belt]; if(pb) ids.push(...pb.cumulative); } return [...new Set(ids)]; }
+function beltNewIds(belt){
+  const ids=[];
+  for(const r of K.requirements){ const res=K.resolved[r.key]; if(res&&res.perBelt[belt]) ids.push(...res.perBelt[belt].new); }
+  const sd=(K.selfdefCurric&&K.selfdefCurric.resolved)||{};
+  for(const key in sd){ const pb=sd[key].perBelt&&sd[key].perBelt[belt]; if(pb&&pb.new) ids.push(...pb.new); }
+  return [...new Set(ids)];
+}
+function gradeableIds(){
+  const ids=new Set();
+  for(const b of ORDER) beltPoolIds(b).forEach(id=>ids.add(id));
+  const sd=(K.selfdefCurric&&K.selfdefCurric.resolved)||{};
+  for(const key in sd){ const res=sd[key]; if(!res||!res.perBelt) continue; for(const b of ORDER){ const pb=res.perBelt[b]; if(pb&&pb.cumulative) pb.cumulative.forEach(id=>ids.add(id)); } }
+  return [...ids];
+}
+function beltProgress(belt){
+  const bi=beltIndex(belt); let req=0, met=0;
+  for(const r of K.requirements){ const need=r.counts[bi]; if(need==null||need===0) continue; const res=K.resolved[r.key];
+    if(res){ const ids=res.perBelt[belt].cumulative; req+=need; met+=ids.filter(id=>(S.mastery[id]||0)>=2).length; } }
+  return { req, met, pct: req?Math.round(met/req*100):0 };
+}
+
+/* ---- header greeting ---- */
+function greetHe(){ const h=new Date().getHours(); return h<12?"בוקר טוב":h<18?"צהריים טובים":"ערב טוב"; }
+const TITLES = {
+  train:  ()=>[`${greetHe()} 👋`, "בוא נתאמן — חמש דקות והשתפרת"],
+  library:()=>["ספריית הטכניקות", "חפש וסנן את כל החומר"],
+  progress:()=>["ההתקדמות שלי", `${cap(currentBelt)} belt · המעקב שלך`],
+};
+
+/* ---- weekly regime (editable, persisted in S.weekPlan) ---- */
+const FOCUS = {
+  choke_pin:{he:"חניקות וקיבועים", short:"חניקות",  en:"Choke & Pin", series:true},
+  breaks:   {he:"סדרת שבירות",      short:"שבירות",  en:"Break Series", series:true},
+  pins:     {he:"קיבועים",          short:"קיבועים", en:"Pins", series:true},
+  judo:     {he:"ג׳ודו",            short:"ג׳ודו",   en:"Judo", series:false},
+  sd_a:     {he:"הגנה עצמית א׳",     short:"הגנה א׳", en:"Self-Defence A", series:false},
+  sd_b:     {he:"הגנה עצמית ב׳",     short:"הגנה ב׳", en:"Self-Defence B", series:false},
+  freestyle:{he:"תרגול חופשי",       short:"חופשי",   en:"Freestyle", series:false},
+};
+const FOCUS_KEYS = Object.keys(FOCUS);
+const DEFAULT_PLAN = { 0:"choke_pin", 1:"judo", 2:"breaks", 3:"sd_a", 4:"sd_b", 5:"freestyle", 6:"freestyle" };
+const DLET = ["א","ב","ג","ד","ה","ו","ש"];
+const DAYNAME = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+function planFor(d){ return (S.weekPlan && S.weekPlan[d]) || DEFAULT_PLAN[d]; }
+const todayIdx = new Date().getDay();
+let activeDay = todayIdx;
+
+/* focus → judo family map (real family labels in data.js) */
+const FAM = { Shime:"Shime", Osae:"Osae-komi", Ude:"Ude-kansetsu" };
+function famIds(fams){ return K.techniques.judo.filter(t=>fams.includes(t.family)).map(t=>t.id); }
+function poolForFocus(focus){
+  const belt=currentBelt;
+  if(focus==="choke_pin") return famIds([FAM.Shime, FAM.Osae]);
+  if(focus==="breaks")    return famIds([FAM.Ude]);
+  if(focus==="pins")      return famIds([FAM.Osae]);
+  if(focus==="judo")      return beltPoolIds(belt);
+  if(focus==="sd_a"||focus==="sd_b"){ const ids=sdCumIds(belt).filter(id=>techById[id]); return ids.length?ids:beltPoolIds(belt); }
+  return [...new Set([...beltPoolIds(belt), ...famIds([FAM.Shime,FAM.Osae,FAM.Ude])])];
+}
+function seriesPlayable(s){ const m=s.order||[]; return m.length>=2 && m.every(x=>x.matched && x.techId); }
+function seriesForFocus(focus){
+  const fams = focus==="breaks"?["Ude-kansetsu"] : focus==="pins"?["Osae-komi"] : ["Shime","Osae-komi","Shime-waza","Osae-komi-waza"];
+  const list=(K.series||[]).filter(s=>seriesPlayable(s) && fams.includes(s.family));
+  return list.length ? list[Math.floor(Math.random()*list.length)] : null;
+}
+
+/* ============================ RENDER: TRAIN ============================ */
+function renderWeek(){
+  $("#weekstrip").innerHTML = DLET.map((l,i)=>{
+    const f=FOCUS[planFor(i)];
+    return `<div class="wd ${i===todayIdx?'today':''} ${i===activeDay?'sel':''}" data-day="${i}"><div class="d">${l}</div><div class="fx">${f.short}</div></div>`;
+  }).join("");
+  $("#weekstrip").querySelectorAll(".wd").forEach(el=>el.onclick=()=>{ activeDay=+el.dataset.day; renderWeek(); renderSessionCard(); });
+}
+function renderSessionCard(){
+  const focus=planFor(activeDay), f=FOCUS[focus], isToday=activeDay===todayIdx;
+  const isSd=isSelfdefFocus(focus);
+  const hasSeries = !isSd && f.series && !!seriesForFocus(focus);
+  $("#sessLbl").textContent = `${isToday?'אימון היום':'תצוגה מקדימה'} · יום ${DAYNAME[activeDay]}`;
+  $("#sessTitle").textContent = f.he;
+  $("#sessMeta").innerHTML = `<b>~${hasSeries?12:8} דק׳</b> · לפי התוכנית השבועית`;
+  let steps;
+  if(isSd){ steps=[{sn:"1",st:"אימון צל",ss:"5 טכניקות"},{sn:"✓",st:"סיכום",ss:"XP"}]; }
+  else { steps=[{sn:"1",st:"פלאשקארד",ss:"5 קלפים"}]; if(hasSeries) steps.push({sn:"2",st:"סדר סדרה",ss:"סדרה"}); steps.push({sn:"✓",st:"סיכום",ss:"XP"}); }
+  $("#sessPlan").innerHTML = steps.map(s=>`<div class="step"><div class="sn">${s.sn}</div><div class="st">${s.st}</div><div class="ss">${s.ss}</div></div>`).join("");
+  $("#startBtn").textContent = isToday?"התחל אימון היום ◂":"התחל אימון (תצוגה) ◂";
+}
+function renderWeekBar(){
+  const st=S.streak||0, on=Math.min(st,7);
+  $("#weekBars").innerHTML = Array.from({length:7},(_,i)=>`<i class="bar ${i<on?'on':''}"></i>`).join("");
+  $("#weekWt").innerHTML = `🔥 ${st}`;
+}
+function renderFocus(){
+  const belt=currentBelt;
+  const outstanding = beltNewIds(belt).map(id=>({id, m:S.mastery[id]||0})).filter(o=>o.m<2 && techById[o.id]).sort((a,b)=>a.m-b.m).slice(0,3);
+  if(!outstanding.length){ $("#focusList").innerHTML = `<div class="empty">כל הכבוד — אין נקודות חולשה פתוחות לחגורה זו ✓</div>`; return; }
+  $("#focusList").innerHTML = outstanding.map(o=>{
+    const t=techById[o.id]; const tag = o.m===0 ? "new" : "weak";
+    return `<div class="frow" data-tid="${o.id}"><span class="tag ${tag}">${tag==='weak'?'חלש':'חדש'}</span><div class="fn">${nameR(o.id)}<small>${t.he||""}</small></div>${dots(o.m)}</div>`;
+  }).join("");
+}
+
+/* ============================ RENDER: LIBRARY ============================ */
+let libFilter = "all", libQuery = "";
+const LIB_FILTERS = [
+  {k:"all", he:"הכל"}, {k:"series", he:"סדרות"}, {k:"judo", he:"ג׳ודו"}, {k:"selfdef", he:"הגנה עצמית"},
+  {k:"bjj", he:"גראפלינג"}, {k:"atemi", he:"אטמי"}, {k:"video", he:"עם וידאו"},
+];
+function libGroups(){
+  const groups=[];
+  const jf={}; K.techniques.judo.forEach(t=>{(jf[t.family]=jf[t.family]||[]).push(t);});
+  Object.entries(jf).forEach(([fam,list])=>{ list.sort((a,b)=>beltRank(a.id)-beltRank(b.id)||((a.kw_num||0)-(b.kw_num||0)));
+    groups.push({pillar:"judo", title:(list[0].familyEn||fam), jp:(list[0].familyKanji||""), items:list.map(t=>({id:t.id, he:t.he, r:t.r, y:t.y, t}))}); });
+  const af={}; (K.techniques.atemi||[]).forEach(t=>{(af[t.family]=af[t.family]||[]).push(t);});
+  Object.entries(af).forEach(([fam,list])=>{ groups.push({pillar:"atemi", title:(list[0].familyEn||fam), jp:(list[0].familyKanji||""), items:list.map(t=>({id:t.id, he:t.he, r:t.r, y:t.y, t}))}); });
+  const sf={}; K.techniques.selfdef.forEach((e,i)=>{ const key=(e.category&&(e.category.en||e.category.he))||"—"; (sf[key]=sf[key]||[]).push({e,i}); });
+  Object.entries(sf).forEach(([catEn,list])=>{ const seen=new Set(),uniq=[]; for(const o of list){ const k=(o.e.ref||o.e.romaji||o.e.he||"").trim(); if(k&&seen.has(k))continue; seen.add(k); uniq.push(o);} 
+    groups.push({pillar:"selfdef", title:(list[0].e.category&&list[0].e.category.he)||catEn, jp:"", items:uniq.map(o=>({app:o.i, he:o.e.he, r:o.e.romaji||"", y:(o.e.ref&&techById[o.e.ref]&&techById[o.e.ref].y)||null, t:o.e}))}); });
+  const bf={}; (K.bjj&&K.bjj.items||[]).forEach(t=>{(bf[t.category]=bf[t.category]||[]).push(t);});
+  (K.bjj&&K.bjj.categories||[]).forEach(c=>{ const list=bf[c.key]; if(!list||!list.length)return; groups.push({pillar:"bjj", title:(c.he||c.en), jp:"", items:list.map(t=>({id:t.id, he:t.he, r:t.r, y:t.y, t}))}); });
+  return groups;
+}
+function renderLibFilters(){
+  $("#libFilters").innerHTML = LIB_FILTERS.map(f=>`<button class="fchip ${f.k===libFilter?'on':''}" data-f="${f.k}">${f.he}</button>`).join("");
+  $("#libFilters").querySelectorAll(".fchip").forEach(b=>b.onclick=()=>{ libFilter=b.dataset.f; renderLibFilters(); renderLib(); });
+}
+function renderLib(){
+  const q=libQuery.trim().toLowerCase();
+  const match=(it)=>{
+    if(libFilter==="video" && !it.y) return false;
+    if(q){ const hay=`${it.he||""} ${it.r||""}`.toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  };
+  let out="";
+  if(libFilter==="all" || libFilter==="series"){
+    const sl=playableSeries().filter(s=>!q || `${s.nameHe||""} ${s.nameEn||""} ${s.family||""}`.toLowerCase().includes(q));
+    if(sl.length){
+      const cards=sl.map(s=>{ const first=techById[(s.order&&s.order[0]&&s.order[0].techId)]; const img=first&&illusFor(first);
+        const thumb = img ? `<div class="img"><img class="imgph" src="${img}" alt=""><button class="zoombtn" data-zoom="${img}" aria-label="הגדל">⤢</button></div>` : `<div class="img seriesnum">${(s.order||[]).length}</div>`;
+        return `<div class="tcard" data-series="${s.seriesId}">${thumb}<div class="cr">${s.nameHe||s.nameEn}</div><div class="ch">${(s.order||[]).length} שלבים</div></div>`; }).join("");
+      out += `<div class="cat"><div class="cathead"><div class="ct">סדרות · Series</div><div class="cc">${sl.length}</div></div><div class="grid">${cards}</div></div>`;
+    }
+  }
+  if(libFilter!=="series"){
+    out += libGroups().map(g=>{
+      if(libFilter!=="all" && libFilter!=="video" && g.pillar!==libFilter) return "";
+      const items=g.items.filter(match); if(!items.length) return "";
+      const cards=items.map(it=>{
+        const attr = it.app!=null ? `data-app="${it.app}"` : `data-tid="${it.id}"`;
+        const src = illusFor(it.t);
+        const img = src ? `<div class="img"><img class="imgph" src="${src}" alt=""><button class="zoombtn" data-zoom="${src}" aria-label="הגדל">⤢</button></div>` : "";
+        return `<div class="tcard ${img?'':'noimg'}" ${attr}>${img}<div class="cr">${it.he||it.r}</div><div class="ch">${it.r||""}</div></div>`;
+      }).join("");
+      return `<div class="cat"><div class="cathead"><div class="ct">${g.title}${g.jp?`<span class="jp">${g.jp}</span>`:""}</div><div class="cc">${items.length}</div></div><div class="grid">${cards}</div></div>`;
+    }).join("");
+  }
+  $("#libGroups").innerHTML = out || `<div class="empty">אין תוצאות</div>`;
+}
+
+/* ============================ RENDER: PROGRESS ============================ */
+function setRing(id, pctId, pct, dash){ const c=document.getElementById(id); if(c) c.style.strokeDashoffset = 264*(1-pct/100); const p=document.getElementById(pctId); if(p) p.textContent = pct+"%"; }
+function renderProgressBelt(){
+  const belt=currentBelt, bi=beltIndex(belt), {req,met,pct}=beltProgress(belt);
+  $("#beltHeroName").innerHTML = `${cap(belt)} <span class="he">· ${BELT_HE[belt]}</span>`;
+  $("#beltHeroSub").innerHTML = `${met} / ${req} דרישות לחגורה · 🔥 ${S.streak||0}`;
+  setTimeout(()=>setRing("pring","pringP",pct),60);
+  // requirements accordion
+  const sd=(K.selfdefCurric&&K.selfdefCurric.resolved)||{};
+  const rows = K.requirements.map(r=>{
+    const need=r.counts[bi]; if(need==null||need===0) return "";
+    const res = K.resolved[r.key] || sd[r.key];
+    let done=0, chips="";
+    if(res && res.perBelt[belt]){
+      const ids = res.perBelt[belt].cumulative.slice().sort((a,b)=>beltRank(a)-beltRank(b));
+      done = ids.filter(id=>(S.mastery[id]||0)>=2).length;
+      chips = `<div class="chips">${ids.map(id=>`<span class="kchip ${(S.mastery[id]||0)>=2?'done':''}" data-tid="${id}">${nameR(id)} ${dots(S.mastery[id]||0)}</span>`).join("")}</div>`;
+    } else {
+      chips = `<div class="note">${r.pillar==='fundamentals'||r.pillar==='randori'?'חומר עיון / תרגול בדוג׳ו — לא נספר במעקב.':'ייספר כשקטגוריה זו תמופה לקטלוג.'}</div>`;
+    }
+    const col = PILLAR_C[r.pillar]||"var(--line2)";
+    return `<div class="creq" style="border-inline-start-color:${col}">
+      <div class="rh"><span class="tw">›</span><div class="nm"><b>${r.he}</b><small>${r.en}</small></div><div class="cnt"><b>${done}</b>/${need}</div></div>
+      <div class="rb">${chips}</div></div>`;
+  }).join("");
+  $("#reqList").innerHTML = rows;
+}
+function renderProgressAll(){
+  const grade=gradeableIds(), total=grade.length;
+  const mastered=grade.filter(id=>(S.mastery[id]||0)>=MAX_M).length;
+  const pct=total?Math.round(mastered/total*100):0;
+  $("#allHeroSub").innerHTML = `${mastered} / ${total} טכניקות בשליטה · ${S.xp||0} XP`;
+  setTimeout(()=>setRing("aring","aringP",pct),60);
+  // pillars
+  const pillars=[["ג׳ודו · Judo","judo","var(--judo)"],["הגנה עצמית · Self-Defense","selfdef","var(--selfdef)"],["גראפלינג · BJJ","bjj","var(--bjj)"]];
+  const idsByPillar = { judo:new Set(), selfdef:new Set(), bjj:new Set() };
+  for(const b of ORDER) beltPoolIds(b).forEach(id=>idsByPillar.judo.add(id));
+  sdAllIds().forEach(id=>idsByPillar.selfdef.add(id));
+  (K.bjj&&K.bjj.items||[]).forEach(t=>idsByPillar.bjj.add(t.id));
+  $("#pillbars").innerHTML = pillars.map(p=>{
+    const ids=[...idsByPillar[p[1]]], tot=ids.length;
+    const done = tot?ids.filter(id=>(S.mastery[id]||0)>=MAX_M).length:0;
+    const pc = tot?Math.round(done/tot*100):0;
+    return `<div class="pbar"><div class="pl"><span>${p[0]}</span><span class="pv">${done}/${tot} · ${pc}%</span></div><div class="track"><i style="width:${pc}%;background:${p[2]}"></i></div></div>`;
+  }).join("");
+}
+function sdAllIds(){ const sd=(K.selfdefCurric&&K.selfdefCurric.resolved)||{}; const ids=new Set(); for(const key in sd){ const res=sd[key]; if(!res||!res.perBelt)continue; for(const b of ORDER){ const pb=res.perBelt[b]; if(pb&&pb.cumulative) pb.cumulative.forEach(id=>ids.add(id)); } } return [...ids]; }
+function renderTrack(){
+  const ci=ORDER.indexOf(currentBelt);
+  $("#track").innerHTML = ORDER.map((id,i)=>`<div class="bnode ${i===ci?'cur':''}"><span class="bdot" style="${i<=ci?`background:${BELT_HEX[id]};border-color:${i===ci?'var(--gold)':BELT_HEX[id]};`:''}"></span><span class="bl">${cap(id).slice(0,2)}</span></div>`).join("");
+}
+function renderBadges(){
+  const grade=gradeableIds();
+  const controlled=grade.filter(id=>(S.mastery[id]||0)>=MAX_M).length;
+  const seen=grade.filter(id=>(S.mastery[id]||0)>=1).length;
+  const {pct}=beltProgress(currentBelt);
+  const B=[
+    {n:"רצף 7 ימים", on:(S.streak||0)>=7, ic:`<path d="M12 2c1 3-2 4-2 7a2 2 0 004 0"/><path d="M8 12a6 6 0 108 0"/>`},
+    {n:"100 טכניקות", on:seen>=100, ic:`<circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/>`},
+    {n:"50 בשליטה", on:controlled>=50, ic:`<path d="M12 2l2.4 6.9H22l-5.8 4.3L18.5 21 12 16.9 5.5 21l2.3-7.8L2 8.9h7.6z"/>`},
+    {n:"חגורה מלאה", on:pct>=100, ic:`<path d="M3 12h18M6 12v5h12v-5"/>`},
+  ];
+  $("#badges").innerHTML = B.map(b=>`<div class="badge ${b.on?'':'lock'}"><span class="bi"><svg viewBox="0 0 24 24">${b.ic}</svg></span><span class="bn">${b.n}</span></div>`).join("");
+}
+
+/* ============================ DETAIL SHEET ============================ */
+function openTech(id){
+  const t=techById[id]; if(!t) return;
+  const lvl=S.mastery[id]||0;
+  const isBjj=t.pillar==="bjj", isAtemi=t.pillar==="atemi", isRef=isBjj||isAtemi;
+  const steps=(t.steps&&t.steps.length)?`<ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`:"";
+  const heroMedia = t.y ? ytEmbed(t.y) : (illusFor(t) ? `<div class="dethero">${heroImg(t)}</div>` : "");
+  const secondary = (t.y && illusFor(t)) ? `<div class="dethero" style="margin-top:12px">${heroImg(t)}</div>` : "";
+  const tags=[];
+  if(t.family) tags.push(`<span class="mtag">${t.family}</span>`);
+  if(t.schoolBelt) tags.push(`<span class="mtag">enters at ${cap(t.schoolBelt)}</span>`);
+  if(isRef) tags.push(`<span class="mtag">reference only</span>`);
+  const masteryBlock = isRef
+    ? `<div class="mhint">${isBjj?'חומר עיון (BJJ) — לא נבחן ולא נספר לחגורה.':'אטמי — חומר עיון, לא נבחן.'}</div>`
+    : `<div class="masterrow"><span class="lbl">רמת שליטה · Mastery</span>
+         <span class="mlvl">${dots(lvl)} <span>${MASTERY_HE[lvl]} (${lvl}/${MAX_M})</span></span>
+         <button class="cta" id="detPractice" style="margin-top:10px">תרגל טכניקה זו ◂</button>
+         <div class="mhint">רמת השליטה נצברת בתרגול בלבד — לא נקבעת ידנית.</div>
+       </div>`;
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    ${heroMedia}
+    ${(!isBjj && t.j)?`<div class="kj">${t.j}</div>`:""}<div class="romaji">${t.r||""}</div>
+    <div class="hb2">${t.he||""}</div><div class="enb">${t.en||""}</div>
+    ${steps}
+    ${secondary}
+    <div class="metatags">${tags.join("")}</div>
+    ${masteryBlock}`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  const dp=$("#detPractice"); if(dp) dp.onclick=()=>{ closeModal(); startTechSession(id); };
+  $("#modal").classList.add("open");
+}
+function openApp(i){
+  const e=K.techniques.selfdef[i]; if(!e) return;
+  const steps=(e.steps&&e.steps.length)?`<ol>${e.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`:"";
+  const linked = e.ref && techById[e.ref];
+  const hero = illusFor(e) ? `<div class="dethero">${heroImg(e)}</div>` : "";
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    ${hero}
+    <div class="romaji">${e.romaji||""}</div>
+    <div class="hb2">${e.he||""}</div>
+    <div class="enb">${(e.category&&e.category.en)||""}${e.scenario&&e.scenario.en?` · ${e.scenario.en}`:""}</div>
+    ${e.scenario&&e.scenario.he?`<div class="note" style="margin-top:8px">${e.scenario.he}</div>`:""}
+    ${steps}
+    <button class="cta" id="shadowThis" style="margin-top:16px">תרגל בצל · Shadow this ◂</button>
+    ${linked?`<div class="masterrow"><span class="lbl">בסיס ג׳ודו · Judo base</span><button class="subbtn" id="goJudo" style="margin-top:10px">${linked.r} ◂</button></div>`:""}`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  const sh=$("#shadowThis"); if(sh) sh.onclick=()=>{ closeModal(); startShadowSession([e]); };
+  const gj=$("#goJudo"); if(gj) gj.onclick=()=>openTech(e.ref);
+  $("#modal").classList.add("open");
+}
+function closeModal(){ $("#modal").classList.remove("open"); }
+function openLightbox(src){ if(!src) return; $("#lightboxImg").src=src; $("#lightbox").classList.add("on"); }
+function closeLightbox(){ $("#lightbox").classList.remove("on"); }
+
+/* ---- syllabus matrix sheet ---- */
+function openSyllabus(){
+  const belts=K.belts;
+  const byPillar={}; for(const r of K.requirements){ (byPillar[r.pillar]=byPillar[r.pillar]||[]).push(r); }
+  const PHE={fundamentals:"יסודות", selfdef:"הגנה עצמית", judo:"ג׳ודו", randori:"קרבות"};
+  let head=`<tr><th>קטגוריה</th>${belts.map(b=>`<th class="${b.id===currentBelt?'cur':''}">${b.he}</th>`).join("")}</tr>`;
+  let body="";
+  for(const p of ["fundamentals","selfdef","judo","randori"]){
+    const list=byPillar[p]; if(!list) continue;
+    body += `<tr><td class="cat" colspan="${belts.length+1}" style="color:${PILLAR_C[p]}">${PHE[p]||p}</td></tr>`;
+    for(const r of list){
+      body += `<tr><td class="cat">${r.he}<small>${r.en}</small></td>${belts.map((b,i)=>{ const v=r.counts[i]; return `<td class="${b.id===currentBelt?'cur':''}">${v?`<b>${v}</b>`:"–"}</td>`; }).join("")}</tr>`;
+    }
+  }
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="hb2" style="font-size:20px">טבלת הסילבוס</div><div class="enb">מספר ההדגמות המצטבר הנדרש בכל חגורה</div>
+    <div class="synscroll"><table class="syntable"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  $("#modal").classList.add("open");
+}
+
+/* ---- weekly plan editor ---- */
+function openWeeklyEditor(){
+  const rows = DLET.map((l,i)=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+      <span style="width:60px;font-weight:800;font-size:14px;">${DAYNAME[i]}</span>
+      <select data-day="${i}" style="flex:1;background:var(--bg);color:var(--txt);border:1px solid var(--line2);border-radius:10px;padding:11px;font-family:var(--sans);font-size:14px;">
+        ${FOCUS_KEYS.map(k=>`<option value="${k}" ${planFor(i)===k?'selected':''}>${FOCUS[k].he}</option>`).join("")}
+      </select></div>`).join("");
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="hb2" style="font-size:20px">תוכנית שבועית</div><div class="enb">בחר מה לתרגל בכל יום</div>
+    <div style="margin-top:14px">${rows}</div>
+    <button class="cta" id="saveWeek" style="margin-top:8px">שמור</button>`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  $("#saveWeek").onclick=()=>{ const plan={}; $("#sheet").querySelectorAll("select").forEach(s=>plan[+s.dataset.day]=s.value); S.weekPlan=plan; save(); renderWeek(); renderSessionCard(); closeModal(); };
+  $("#modal").classList.add("open");
+}
+
+/* ---- series detail sheet ---- */
+function openSeries(id){
+  const s=(K.series||[]).find(x=>x.seriesId===id); if(!s) return;
+  const members=(s.order||[]).slice().sort((a,b)=>a.pos-b.pos);
+  const rows=members.map((m,i)=>{ const t=techById[m.techId]; const img=t&&illusFor(t);
+    return `<div class="serow">
+      <span class="senum">${i+1}</span>
+      ${img?`<span class="sethumb"><img src="${img}" alt=""></span>`:""}
+      <div class="setx"><b>${m.he||(t&&t.he)||nameR(m.techId)}</b><small class="jpf">${m.romaji||(t&&t.r)||""}</small></div>
+    </div>`; }).join("");
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="hb2" style="font-size:20px">${s.nameHe||s.nameEn||"סדרה"}</div><div class="enb">${s.nameEn||""} · ${members.length} שלבים</div>
+    <div class="selist">${rows}</div>
+    <button class="cta" id="playSeries" style="margin-top:16px">סדר את הסדרה ◂</button>`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  $("#playSeries").onclick=()=>{ closeModal(); startSeriesSession(s); };
+  $("#modal").classList.add("open");
+}
+
+/* ---- series chooser (pick which to practice, or random) ---- */
+function openSeriesChooser(){
+  const list=playableSeries();
+  if(!list.length){ startSeriesSession(); return; }
+  const rows=list.map(s=>{ const first=techById[(s.order&&s.order[0]&&s.order[0].techId)]; const img=first&&illusFor(first); const n=(s.order||[]).length;
+    return `<button class="serow serow-btn" data-pick="${s.seriesId}">
+      ${img?`<span class="cthumb"><img src="${img}" alt=""></span>`:`<span class="senum">${n}</span>`}
+      <div class="setx"><b>${s.nameHe||s.nameEn||"סדרה"}</b><small class="jpf">${[s.nameEn,`${n} שלבים`].filter(Boolean).join(" · ")}</small></div>
+    </button>`; }).join("");
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="hb2" style="font-size:20px">בחר סדרה לתרגול</div><div class="enb">בחר סדרה מהרשימה או תרגל אחת אקראית</div>
+    <button class="cta" id="randSeries" style="margin-top:14px">🎲 אקראי · Random ◂</button>
+    <div class="selist" style="margin-top:14px">${rows}</div>`;
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  $("#randSeries").onclick=()=>{ closeModal(); startSeriesSession(); };
+  $("#sheet").querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ const s=list.find(x=>x.seriesId===b.dataset.pick); closeModal(); startSeriesSession(s); });
+  $("#modal").classList.add("open");
+}
+
+/* ---- one-time "what's new" popup ---- */
+const WHATS_NEW = [
+  ["🧠","חידון דו-כיווני","לפעמים איור → בחר שם יפני, ולפעמים איור+יפני → בחר עברית"],
+  ["🔗","סדר סדרה","תרגול חדש: סדר את טכניקות הסדרה לפי הסדר — גם מהאימון וגם מהספרייה"],
+  ["🥊","אימון צל להגנה עצמית","קרא ובצע — הגנות בעמידה, שלב אחר שלב"],
+  ["⬆️","חלונות נפתחים מלמעלה","כפתורי סגירה ופעולה תמיד נגישים, בלי לגלול עד הסוף"],
+  ["🖼️","בלי איורי מילוי","טכניקות ללא איור מוצגות נקי, בלי ציור גנרי"],
+];
+function openWhatsNew(){
+  const rows = WHATS_NEW.map(r=>`<div class="wnrow"><span class="wnic">${r[0]}</span><div class="wntx"><b>${r[1]}</b><small>${r[2]}</small></div></div>`).join("");
+  $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="wnhead">מה חדש? 🎉</div><div class="enb">כמה שיפורים גדולים חיכו לך</div>
+    <div class="wnlist">${rows}</div>
+    <button class="cta" id="wnClose" style="margin-top:6px">יאללה, בוא נתאמן ◂</button>`;
+  const done=()=>{ S.seenWhatsNew=WHATS_NEW_VERSION; save(); closeModal(); };
+  $("#sheet").querySelectorAll("[data-close]").forEach(b=>b.onclick=done);
+  $("#wnClose").onclick=done;
+  $("#modal").classList.add("open");
+}
+
+/* ---- belt menu ---- */
+const beltmenu=$("#beltmenu");
+function renderBeltMenu(){
+  beltmenu.innerHTML = `<div class="mh">בחר חגורה · Select belt</div>` + ORDER.map(id=>
+    `<div class="bmi ${id===currentBelt?'cur':''}" data-belt="${id}"><span class="cdot" style="background:${BELT_HEX[id]}"></span>${BELT_HE[id]}<span class="en">${cap(id)}</span>${id===currentBelt?'<span class="ck">✓</span>':''}</div>`).join("");
+  beltmenu.querySelectorAll(".bmi").forEach(el=>el.onclick=()=>selectBelt(el.dataset.belt));
+}
+function toggleBeltMenu(e){ if(e) e.stopPropagation(); renderBeltMenu(); beltmenu.classList.toggle("open"); }
+function selectBelt(id){
+  currentBelt=id; S.currentBelt=id; save();
+  $("#beltpill").textContent = `${cap(id)} · ${BELT_HE[id]} ▾`;
+  $("#setBeltV").textContent = `${cap(id)} ▾`;
+  beltmenu.classList.remove("open");
+  renderFocus(); renderProgressBelt(); renderTrack(); renderBadges();
+  if($("main").scrollTop!=null){}
+}
+
+/* ============================ SESSION OVERLAY ============================ */
+const ov=$("#sessionOv");
+let sess=null;
+const DIF=[{c:"d0",t:"קל"},{c:"d1",t:"בינוני"},{c:"d2",t:"מאתגר"}];
+function tierOf(m){ return m>=2?2:(m>=1?1:0); }
+function distractorIds(id, tier){
+  const t=techById[id];
+  const sameNs = (judoById[id]||atemiById[id] ? NAMED_JUDO : gradeableIds().filter(x=>techById[x])).filter(x=>!isVariant(techById[x]));
+  const same = sameNs.filter(x=>x!==id && techById[x] && techById[x].family && techById[x].family===t.family);
+  const others = sameNs.filter(x=>x!==id && (!t.family || !techById[x] || techById[x].family!==t.family));
+  let pick = tier===2 ? shuffle(same).slice(0,3) : shuffle(same).slice(0,1);
+  const pool = shuffle(others);
+  let i=0; while(pick.length<3 && i<pool.length){ if(pick.indexOf(pool[i])<0) pick.push(pool[i]); i++; }
+  // last-resort fill from same namespace
+  const all=shuffle(sameNs.filter(x=>x!==id));
+  i=0; while(pick.length<3 && i<all.length){ if(pick.indexOf(all[i])<0) pick.push(all[i]); i++; }
+  return pick.slice(0,3);
+}
+function buildQuestion(id){
+  const m=S.mastery[id]||0, tier=tierOf(m);
+  const opts=shuffle([id, ...distractorIds(id,tier)]);
+  const hasImg=!!illusFor(techById[id]);
+  const dir = hasImg ? (Math.random()<0.5 ? "jp" : "he") : "he"; // jp: illus→Japanese; he: illus+Japanese→Hebrew
+  return { id, tier, opts, dir };
+}
+function pickWeighted(pool, n){
+  const uniq=[...new Set(pool)].filter(id=>{ const t=techById[id]; return t && !isVariant(t) && (illusFor(t) || t.y); });
+  const arr=uniq.slice(); const out=[]; n=Math.min(n,arr.length);
+  const w=id=>{ const m=Math.min(S.mastery[id]||0,MAX_M); return m>=MAX_M?1:(MAX_M-m)*3+1; };
+  for(let k=0;k<n;k++){ const ws=arr.map(w); let tot=0; ws.forEach(x=>tot+=x); let r=Math.random()*tot,pi=0; for(let i=0;i<arr.length;i++){ r-=ws[i]; if(r<=0){pi=i;break;} } out.push(arr[pi]); arr.splice(pi,1); }
+  return out;
+}
+function isSelfdefFocus(focus){ return focus==="sd_a"||focus==="sd_b"; }
+function startDailySession(){
+  const focus=planFor(activeDay);
+  if(isSelfdefFocus(focus)){ startShadowSession(null, true); return; }
+  const pool=poolForFocus(focus);
+  const deck=pickWeighted(pool,5);
+  if(!deck.length){ startShadowSession(null, true); return; }
+  const series = FOCUS[focus].series ? seriesForFocus(focus) : null;
+  sess={ mode:"daily", step:0, qi:0, correct:0, total:deck.length, q:deck.map(buildQuestion), answered:false, series, order:null, free:false };
+  ov.classList.add("on"); renderSession();
+}
+function startFreeSession(mode){
+  const belt=currentBelt;
+  const syll=[...new Set([...beltPoolIds(belt), ...sdCumIds(belt), ...famIds([FAM.Shime,FAM.Osae,FAM.Ude])])]
+    .filter(id=>techById[id] && illusFor(techById[id]));
+  let pool = mode==="weak" ? syll.slice().sort((a,b)=>(S.mastery[a]||0)-(S.mastery[b]||0)).slice(0,6) : shuffle(syll).slice(0,6);
+  if(!pool.length) pool = pickWeighted(beltPoolIds(belt),6);
+  sess={ mode:"free", step:0, qi:0, correct:0, total:pool.length, q:pool.map(buildQuestion), answered:false, series:null, order:null, free:true };
+  ov.classList.add("on"); renderSession();
+}
+function startTechSession(id){
+  sess={ mode:"tech", step:0, qi:0, correct:0, total:1, q:[buildQuestion(id)], answered:false, series:null, order:null, free:true };
+  ov.classList.add("on"); renderSession();
+}
+function startShadowSession(items, daily){
+  const pool=(items&&items.length)?items:shuffle(K.techniques.selfdef.filter(e=>e.steps&&e.steps.length)).slice(0,5);
+  if(!pool.length){ endSession(); return; }
+  sess={ mode:"shadow", step:0, si:0, total:pool.length, items:pool, correct:0, series:null, free:!daily };
+  ov.classList.add("on"); renderSession();
+}
+function playableSeries(){ return (K.series||[]).filter(seriesPlayable); }
+function startSeriesSession(series){
+  const list=playableSeries();
+  const s = series || (list.length ? list[Math.floor(Math.random()*list.length)] : null);
+  if(!s){ endSession(); return; }
+  sess={ mode:"series", step:1, series:s, order:null, correct:0, total:0, seriesOk:false, free:true };
+  ov.classList.add("on"); renderSession();
+}
+function shadowTop(pct){
+  return `<div class="sov-top"><button class="x" data-end>×</button><div class="sov-prog"><i style="width:${pct}%"></i></div><div class="sov-count">${sess.si+1}/${sess.total}</div></div>
+    <div class="stepper"><div class="sp ${sess.step<2?'on':'done'}"><span class="n">${sess.step>=2?'✓':'1'}</span>אימון צל</div><div class="sp ${sess.step>=2?'on':''}"><span class="n">★</span>סיום</div></div>`;
+}
+function renderShadow(){
+  const e=sess.items[sess.si], pct=sess.si/sess.total*100;
+  const steps=(e.steps||[]).map(s=>`<li>${s}</li>`).join("");
+  const eyebrow=[(e.category&&e.category.he)||"", (e.scenario&&e.scenario.he)||""].filter(Boolean).join(" · ");
+  ov.innerHTML = `${shadowTop(pct)}
+    <div class="difpill d1">בצע · Do it</div>
+    <div class="sov-body">
+      <div class="sov-q">${eyebrow}</div>
+      <div class="shadowcard">
+        <div class="shname">${e.he||""}${e.romaji?`<small>${e.romaji}</small>`:""}</div>
+        <ol class="shsteps">${steps}</ol>
+        ${e.scenario&&e.scenario.en?`<div class="shen">${e.scenario.en}</div>`:""}
+      </div>
+    </div>
+    <div class="sov-foot"><button class="cta" id="shNext">${sess.si+1>=sess.total?"סיים ◂":"בוצע · הבא ◂"}</button></div>`;
+  ov.querySelector("[data-end]").onclick=endSession;
+  ov.querySelector("#shNext").onclick=()=>{ S.xp=(S.xp||0)+5; save(); sess.si++; if(sess.si>=sess.total){ sess.step=2; renderSession(); } else renderShadow(); };
+}
+function stepperHtml(){
+  const steps = sess.mode==="series" ? [["סדר סדרה",1],["סיום",2]]
+    : sess.series ? [["פלאשקארד",0],["סדרה",1],["סיום",2]] : [["תרגול",0],["סיום",2]];
+  const last=steps.length-1;
+  return `<div class="stepper">${steps.map((s,idx)=>`<div class="sp ${sess.step===s[1]?'on':sess.step>s[1]?'done':''}"><span class="n">${sess.step>s[1]?'✓':(idx===last?'★':idx+1)}</span>${s[0]}</div>`).join("")}</div>`;
+}
+function topHtml(pct,count){ // pct===null hides the progress bar (practice, not quiz)
+  const bar = pct===null ? `<div style="flex:1"></div>` : `<div class="sov-prog"><i style="width:${pct}%"></i></div>`;
+  return `<div class="sov-top"><button class="x" data-end>×</button>${bar}${count?`<div class="sov-count">${count}</div>`:""}</div>${stepperHtml()}`;
+}
+function renderSession(){ if(sess.mode==="shadow") return sess.step>=2 ? renderDone() : renderShadow(); if(sess.step===0) return renderMCQ(); if(sess.step===1) return renderSeries(); return renderDone(); }
+
+function renderMCQ(){
+  const q=sess.q[sess.qi], t=techById[q.id], pct=sess.qi/sess.total*100, dif=DIF[q.tier];
+  const img = illusFor(t) ? `<div class="sov-hero"><img src="${illusFor(t)}" alt=""></div>` : "";
+  let qLine, hero, optHtml;
+  if(q.dir==="jp"){
+    hero = img;
+    qLine = "איזו טכניקה זו? · בחר את השם היפני";
+    optHtml = q.opts.map(o=>`<button class="opt" data-opt="${o}"><div class="om jp">${nameR(o)}</div></button>`).join("");
+  } else {
+    hero = `${img}<div class="sov-heroname">${nameR(q.id)}</div>`;
+    qLine = img ? "בחר את השם בעברית · לפי האיור והשם היפני" : "בחר את השם בעברית · לפי השם היפני";
+    optHtml = q.opts.map(o=>{ const oe=techById[o];
+      return `<button class="opt" data-opt="${o}"><div class="om">${nameHe(o)||nameR(o)}</div>${(oe&&oe.en)?`<div class="osub">${oe.en}</div>`:""}</button>`; }).join("");
+  }
+  ov.innerHTML = `${topHtml(pct,(sess.qi+1)+"/"+sess.total)}
+    <div class="difpill ${dif.c}">${dif.t}</div>
+    <div class="sov-body">
+      <div class="sov-q">${qLine}</div>
+      ${hero}
+      <div class="opts">${optHtml}</div>
+      <div id="mcqAfter"></div>
+    </div>
+    <div class="sov-foot" id="sovFoot"></div>`;
+  ov.querySelector("[data-end]").onclick=endSession;
+  ov.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerMCQ(b,q));
+}
+function answerMCQ(btn,q){
+  if(sess.answered) return; sess.answered=true;
+  const t=techById[q.id], right=btn.dataset.opt===q.id;
+  ov.querySelectorAll(".opt").forEach(b=>{ if(b.dataset.opt===q.id)b.classList.add("correct"); else if(b===btn)b.classList.add("wrong"); else b.classList.add("dim"); b.onclick=null; });
+  let lvl=S.mastery[q.id]||0;
+  if(right){ sess.correct++; lvl=Math.min(MAX_M,lvl+1); S.xp=(S.xp||0)+10; }
+  else { if(lvl>0) lvl=lvl-1; S.xp=(S.xp||0)+1; }
+  S.mastery[q.id]=lvl; save();
+  const after=ov.querySelector("#mcqAfter");
+  const wrongMedia = illusFor(t) || t.y;
+  after.innerHTML = right
+    ? `<div style="text-align:center;margin-top:14px;color:var(--accent);font-weight:800;">נכון! +10 XP · ${t.he||""} <span class="jpf">${nameR(q.id)}</span></div>`
+    : `<div style="text-align:center;margin-top:14px;color:var(--bad);font-weight:800;">התשובה: ${t.he||""} · <span class="jpf">${nameR(q.id)}</span></div>
+       ${wrongMedia?`<button class="revealbtn" id="revealBtn">הצג איור/וידאו של התשובה ▾</button><div id="revealBox"></div>`:""}`;
+  const rb=after.querySelector("#revealBtn");
+  if(rb) rb.onclick=()=>{ after.querySelector("#revealBox").innerHTML = t.y?ytEmbed(t.y):(illusFor(t)?`<div class="revealbox"><img src="${illusFor(t)}" alt=""></div>`:""); rb.style.display="none"; };
+  const prog=ov.querySelector(".sov-prog i"); if(prog) prog.style.width=((sess.qi+1)/sess.total*100)+"%";
+  ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="nextQ">${sess.qi+1>=sess.total?"המשך ◂":"הבא ◂"}</button>`;
+  ov.querySelector("#nextQ").onclick=()=>{ sess.qi++; sess.answered=false; if(sess.qi>=sess.total){ sess.step=sess.series?1:2; renderSession(); } else renderMCQ(); };
+}
+function renderSeries(){
+  const s=sess.series;
+  const members = s.order.slice().sort((a,b)=>a.pos-b.pos);
+  if(!sess.order){ sess.order = { correct:members, placed:[], pool:shuffle(members.map((_,i)=>i)) }; }
+  const st=sess.order;
+  const N=members.length;
+  const slots = members.map((_,i)=>{ const mi=st.placed[i]; if(mi==null) return `<div class="slot"><span class="sn">${i+1}</span><span class="sph">מיקום ${i+1}…</span></div>`;
+    const m=members[mi], t=techById[m.techId]; const pi=heroImg(t);
+    return `<div class="slot filled"><span class="sn">${i+1}</span>${pi?`<span class="pimg">${pi}</span>`:""}<span class="snm">${m.he||(t&&t.he)||""}<small>${m.romaji||(t&&t.r)||""}</small></span></div>`; }).join("");
+  const pool = st.pool.map(mi=>{ const m=members[mi], t=techById[m.techId], pi=heroImg(t); return `<div class="pcard ${st.placed.includes(mi)?'used':''}" data-p="${mi}">${pi?`<span class="pimg">${pi}</span>`:""}${m.he||(t&&t.he)||nameR(m.techId)}</div>`; }).join("");
+  const seriesTop = sess.mode==="series" ? topHtml(null,`${st.placed.length}/${N}`) : topHtml(100,`${st.placed.length}/${N}`);
+  ov.innerHTML = `${seriesTop}
+    <div class="sov-body">
+      <div class="sov-q">סדר את הסדרה — ${s.nameHe||s.nameEn||""} · הקש לפי הסדר</div>
+      <div class="slots" id="slots">${slots}</div>
+      <div class="pool" id="pool">${pool}</div>
+      <div id="seriesAfter"></div>
+    </div>
+    <div class="sov-foot" id="sovFoot"></div>`;
+  ov.querySelector("[data-end]").onclick=endSession;
+  ov.querySelectorAll(".pcard").forEach(c=>c.onclick=()=>{ if(st.placed.length>=N) return; st.placed.push(+c.dataset.p); renderSeries(); if(st.placed.length===N) checkSeries(); });
+}
+function checkSeries(){
+  const st=sess.order, N=st.correct.length, slots=ov.querySelectorAll("#slots .slot"); let ok=true;
+  st.placed.forEach((mi,i)=>{ const good=mi===i; slots[i].classList.add(good?"correct":"wrong"); if(!good) ok=false; });
+  sess.seriesOk=ok; if(ok) S.xp=(S.xp||0)+20; save();
+  const after=ov.querySelector("#seriesAfter");
+  after.innerHTML = `<div style="text-align:center;margin-top:14px;font-weight:800;color:${ok?'var(--accent)':'var(--bad)'}">${ok?'מצוין! הסדר נכון · +20 XP':'כמעט — הסדר הנכון מסומן בירוק'}</div>`;
+  ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="toDone">סיים ◂</button>`;
+  ov.querySelector("#toDone").onclick=()=>{ sess.step=2; renderSession(); };
+}
+function renderDone(){
+  bumpStreak();
+  const isShadow=sess.mode==="shadow", isSeries=sess.mode==="series";
+  const acc=(isShadow||isSeries)?null:Math.round(sess.correct/sess.total*100);
+  const xp=isShadow?sess.total*5:(isSeries?(sess.seriesOk?20:0):(sess.correct*10+(sess.series?20:0)));
+  const line=isShadow?`${sess.total} טכניקות תורגלו בצל`:(isSeries?`הסדרה סודרה${sess.seriesOk?' נכון ✓':''}`:`${sess.correct}/${sess.total} נכונות בפלאשקארד${sess.series?' · הסדרה סודרה':''}`);
+  const stat3=isShadow?`<div><div class="n">${sess.total}</div><div class="l">תרגולים</div></div>`:(isSeries?`<div><div class="n">${sess.seriesOk?'✓':'—'}</div><div class="l">סדרה</div></div>`:`<div><div class="n">${acc}%</div><div class="l">דיוק</div></div>`);
+  ov.innerHTML = `<div class="sov-top"><button class="x" data-end>×</button><div class="sov-prog"><i style="width:100%"></i></div><div class="sov-count">✓</div></div>
+    <div class="sov-done"><div class="big">✓</div>
+      <h2>${sess.free?'תרגול הושלם!':'אימון היום הושלם!'}</h2>
+      <p>${line}<br>המשך כך — נתראה מחר 🔥</p>
+      <div class="row"><div><div class="n a">+${xp}</div><div class="l">XP</div></div><div><div class="n">${S.streak||0}</div><div class="l">רצף</div></div>${stat3}</div>
+      <button class="cta" data-end style="margin-top:22px">סיום · Done</button></div>`;
+  ov.querySelectorAll("[data-end]").forEach(b=>b.onclick=endSession);
+}
+function endSession(){ ov.classList.remove("on"); sess=null; refreshAll(); }
+
+/* ---- streak ---- */
+function bumpStreak(){
+  const today=new Date().toISOString().slice(0,10);
+  if(S.lastDay===today) return;
+  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+  S.streak = (S.lastDay===y)?(S.streak||0)+1:1;
+  S.lastDay=today; save();
+}
+
+/* ============================ NAV / INIT ============================ */
+function goto(v){
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.dataset.view===v));
+  document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  const t=TITLES[v](); $("#htitle").innerHTML=t[0]; $("#hsub").textContent=t[1]; $("main").scrollTop=0;
+  if(v==="progress"){ renderProgressBelt(); renderProgressAll(); renderTrack(); renderBadges(); }
+}
+function refreshAll(){ renderWeek(); renderSessionCard(); renderWeekBar(); renderFocus(); renderProgressBelt(); renderProgressAll(); renderTrack(); renderBadges(); }
+
+function init(){
+  $("#beltpill").textContent = `${cap(currentBelt)} · ${BELT_HE[currentBelt]} ▾`;
+  $("#setBeltV").textContent = `${cap(currentBelt)} ▾`;
+  renderWeek(); renderSessionCard(); renderWeekBar(); renderFocus();
+  renderLibFilters(); renderLib();
+  renderProgressBelt(); renderProgressAll(); renderTrack(); renderBadges();
+  const t=TITLES.train(); $("#htitle").innerHTML=t[0]; $("#hsub").textContent=t[1];
+
+  document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>goto(b.dataset.view));
+  $("#startBtn").onclick=startDailySession;
+  $("#trainAll").onclick=()=>startFreeSession("all");
+  $("#trainAll2").onclick=()=>startFreeSession("all");
+  $("#trainWeak").onclick=()=>startFreeSession("weak");
+  $("#trainShadow").onclick=()=>startShadowSession();
+  $("#trainSeries").onclick=openSeriesChooser;
+  $("#editWeek").onclick=openWeeklyEditor; $("#setWeekly").onclick=openWeeklyEditor;
+  $("#beltpill").onclick=toggleBeltMenu; $("#setBelt").onclick=toggleBeltMenu;
+  $("#toMatrix").onclick=openSyllabus; $("#syllTrain").onclick=openSyllabus; $("#syllLib").onclick=openSyllabus;
+  $("#setReset").onclick=()=>{ if(confirm("לאפס את כל ההתקדמות? פעולה זו מוחקת שליטה ו-XP ואינה הפיכה.")){ S.mastery={}; S.xp=0; S.streak=0; save(); refreshAll(); } };
+  $("#libSearch").oninput=e=>{ libQuery=e.target.value; renderLib(); };
+  $("#progScope").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    $("#progScope").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+    const belt=b.dataset.scope==="belt";
+    $("#scopeBelt").style.display=belt?"block":"none"; $("#scopeAll").style.display=belt?"none":"block";
+    if(belt) renderProgressBelt(); else renderProgressAll();
+  });
+  document.addEventListener("click",e=>{ if(!e.target.closest("#beltmenu") && !e.target.closest("#beltpill") && !e.target.closest("#setBelt")) beltmenu.classList.remove("open"); });
+  $("#modal").onclick=e=>{ if(e.target.id==="modal") closeModal(); };
+  // delegated taps: technique cards, self-defense apps, requirement accordions
+  $("#lightbox").onclick=closeLightbox;
+  document.addEventListener("click",e=>{
+    const zb=e.target.closest("[data-zoom]"); if(zb){ e.stopPropagation(); openLightbox(zb.dataset.zoom); return; }
+    const zc=e.target.closest(".dethero, .sov-hero, .revealbox, .sethumb"); if(zc){ const im=zc.querySelector("img"); if(im){ openLightbox(im.src); return; } }
+    const se=e.target.closest("[data-series]"); if(se){ openSeries(se.dataset.series); return; }
+    const tid=e.target.closest("[data-tid]"); if(tid){ openTech(tid.dataset.tid); return; }
+    const app=e.target.closest("[data-app]"); if(app){ openApp(+app.dataset.app); return; }
+    const rh=e.target.closest(".creq .rh"); if(rh){ rh.closest(".creq").classList.toggle("open"); return; }
+  });
+
+  if(S.seenWhatsNew !== WHATS_NEW_VERSION) setTimeout(openWhatsNew, 350);
+}
+init();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration failed:', err)); });
+}
+</script>
+</body>
+</html>
