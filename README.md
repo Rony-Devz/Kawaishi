@@ -1,6 +1,6 @@
 # Kawaishi Ju-Jitsu
 
-A Hebrew-first (RTL), installable training app (PWA) for the Kawaishi Ju-Jitsu syllabus — belt progression, daily training sessions, flashcard quizzes, series-ordering drills, shadow training, and a full technique library with illustrations.
+A Hebrew-first (RTL), installable training app (PWA) for the Dojo I train at based on our curicullum and syllabus. App includes: belt progression, daily training sessions, flashcard quizzes, series-ordering drills, shadow training, and a full technique library with illustrations.
 
 ## 🔗 Live app
 
