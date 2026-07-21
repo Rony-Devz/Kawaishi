@@ -8,7 +8,7 @@
  *   - images + static     -> cache-first with runtime caching.
  */
 
-const VERSION = "v43";
+const VERSION = "v45";
 const PRECACHE = "kawaishi-precache-" + VERSION;
 const RUNTIME = "kawaishi-runtime-" + VERSION;
 
@@ -17,6 +17,7 @@ const PRECACHE_URLS = [
   "./",
   "./index.html",
   "./data.js",
+  "./twoslaps-bank.js",
   "./routines-bank.js",
   "./routines.js",
   "./manifest.webmanifest",
@@ -102,7 +103,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // data.js + routines files -> network-first so content/logic updates appear immediately.
-  if (/(?:^|\/)(data|routines-bank|routines)\.js$/.test(url.pathname)) {
+  if (/(?:^|\/)(data|twoslaps-bank|routines-bank|routines)\.js$/.test(url.pathname)) {
     event.respondWith(networkFirst(request));
     return;
   }

@@ -68,8 +68,11 @@
     for (var i = 0; i < s.bankAdd.length; i++) if (s.bankAdd[i].id === id) return s.bankAdd[i];
     return null;
   }
+  function tsBank() { var b = window.KAWAISHI_TWOSLAPS; return (b && b.exercises) || []; }
+  function tsById(ref) { var id = ref.slice(3), a = tsBank(); for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
   function sourceSteps(ref) {
     var E = eng(), K = E.K || window.KAWAISHI || {}, techById = E.techById || {};
+    if (ref.indexOf("ts:") === 0) { var x = tsById(ref); return (x && x.steps) || []; }
     if (ref.indexOf("sd:") === 0) { var e = ((K.techniques && K.techniques.selfdef) || [])[+ref.slice(3)] || {}; return e.steps || []; }
     if (ref.indexOf("custom:") === 0) { var c = customById(ref); return (c && c.steps) || []; }
     var t = techById[ref] || {}; return t.steps || [];
@@ -78,7 +81,10 @@
     var E = eng(), K = E.K || window.KAWAISHI || {}, techById = E.techById || {};
     var s = load(), ov = s.stepOverrides[ref];
     var base;
-    if (ref.indexOf("sd:") === 0) {
+    if (ref.indexOf("ts:") === 0) {
+      var x = tsById(ref);
+      base = { kind: "ts", ok: !!x, he: (x && x.he) || "", romaji: (x && x.romaji) || "", cat: (x && x.cat) || "" };
+    } else if (ref.indexOf("sd:") === 0) {
       var e = ((K.techniques && K.techniques.selfdef) || [])[+ref.slice(3)] || {};
       base = { kind: "sd", ok: true, he: e.he || "", romaji: e.romaji || "", cat: (e.category && e.category.he) || "" };
     } else if (ref.indexOf("custom:") === 0) {
@@ -95,13 +101,10 @@
 
   /* ---------- the bank (flat, searchable) ---------- */
   function bankExercises() {
-    var E = eng(), K = E.K || window.KAWAISHI || {}, techById = E.techById || {};
     var s = load(), hidden = {};
     s.bankHidden.forEach(function (r) { hidden[r] = 1; });
     var out = [];
-    var sd = (K.techniques && K.techniques.selfdef) || [];
-    sd.forEach(function (e, i) { var ref = "sd:" + i; if (!hidden[ref]) out.push(resolveRef(ref)); });
-    Object.keys(techById).forEach(function (id) { if (!hidden[id]) out.push(resolveRef(id)); });
+    tsBank().forEach(function (ex) { var ref = "ts:" + ex.id; if (!hidden[ref]) out.push(resolveRef(ref)); });
     s.bankAdd.forEach(function (c) { var ref = "custom:" + c.id; if (!hidden[ref]) out.push(resolveRef(ref)); });
     return out;
   }
@@ -204,9 +207,17 @@
       ".ts-bank-row{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}" +
       ".ts-bank-name b{font-size:14px;font-weight:800}" +
       ".ts-bank-name span{display:block;font-size:11px;color:var(--muted);direction:ltr;text-align:right}" +
-      ".ts-bank-acts{display:flex;gap:8px;margin-top:8px}" +
-      ".ts-bank-acts .ts-btn{flex:1}" +
+      ".ts-bank-acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}" +
+      ".ts-bank-acts .ts-btn{flex:1;min-width:88px}" +
       ".ts-bank-row.ts-added{opacity:.55}" +
+      ".ts-bank-steps{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}" +
+      ".ts-bank-steps ol{margin:0;padding-inline-start:20px;font-size:13px;line-height:1.75;color:var(--txt);direction:rtl;text-align:right}" +
+      ".ts-bank-steps li{margin-bottom:3px}" +
+      ".ts-nosteps{color:var(--muted);font-size:12px}" +
+      ".ts-bank-cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}" +
+      ".ts-catchip{background:var(--bg);border:1px solid var(--line2);color:var(--txt);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;font-family:var(--sans);cursor:pointer}" +
+      ".ts-catchip:hover,.ts-catchip:active{background:var(--card)}" +
+      ".ts-catchip.ts-added{opacity:.5;pointer-events:none}" +
       ".ts-moveSel{appearance:none;-webkit-appearance:none;background:var(--bg) " + chevron + " no-repeat left 10px center;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 12px 8px 30px;font-size:12.5px;font-family:var(--sans)}" +
       /* toast */
       "#ts-toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(10px);background:var(--card2);color:var(--txt);border:1px solid var(--line2);border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;font-family:var(--sans);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:120}" +
@@ -399,13 +410,29 @@
       list = list.slice(0, 80);
       if (!list.length) return '<div class="ts-empty">לא נמצאו תרגילים.</div>';
       return list.map(function (x) {
+        var ref = esc(x.ref);
         var added = target >= 0 && inCat[x.ref];
         var acts = '';
-        if (target >= 0) acts += '<button class="ts-btn ' + (added ? '' : '') + '" data-badd="' + esc(x.ref) + '">' + (added ? 'נוסף ✓' : 'הוסף') + '</button>';
-        acts += '<button class="ts-btn ts-danger" data-bdel="' + esc(x.ref) + '">מחק מהמאגר</button>';
-        return '<div class="ts-bank-row' + (added ? ' ts-added' : '') + '" data-row="' + esc(x.ref) + '">' +
+        if (target >= 0) acts += '<button class="ts-btn" data-badd="' + ref + '">' + (added ? 'נוסף ✓' : 'הוסף') + '</button>';
+        else acts += '<button class="ts-btn" data-baddcat="' + ref + '">+ הוסף לקטגוריה</button>';
+        acts += '<button class="ts-btn ts-ghost" data-bsteps="' + ref + '">שלבים ▾</button>';
+        acts += '<button class="ts-btn ts-danger" data-bdel="' + ref + '">מחק מהמאגר</button>';
+        var stepsHtml = (x.steps && x.steps.length)
+          ? '<ol>' + x.steps.map(function (sp) { return '<li>' + esc(sp) + '</li>'; }).join('') + '</ol>'
+          : '<div class="ts-nosteps">אין שלבים לתרגיל זה.</div>';
+        var catsHtml = '';
+        if (target < 0) {
+          var chips = s.categories.map(function (c, ci) {
+            return '<button class="ts-catchip" data-addto="' + ci + '" data-ref="' + ref + '">' + esc(c.title || ('קטגוריה ' + (ci + 1))) + '</button>';
+          }).join('');
+          catsHtml = '<div class="ts-bank-cats" data-catsfor="' + ref + '" style="display:none">' +
+            (chips || '<div class="ts-nosteps">אין קטגוריות — צור קטגוריה קודם.</div>') + '</div>';
+        }
+        return '<div class="ts-bank-row' + (added ? ' ts-added' : '') + '" data-row="' + ref + '">' +
           '<div class="ts-bank-name"><b>' + esc(x.he || x.romaji || x.ref) + '</b>' + (x.romaji ? '<span>' + esc(x.romaji) + '</span>' : '') + '</div>' +
           '<div class="ts-bank-acts">' + acts + '</div>' +
+          catsHtml +
+          '<div class="ts-bank-steps" data-stepsfor="' + ref + '" style="display:none">' + stepsHtml + '</div>' +
         '</div>';
       }).join("");
     }
@@ -423,6 +450,28 @@
     sheet.querySelector("#tsBankSearch").oninput = function (ev) { sheet.querySelector("#tsBankList").innerHTML = draw(ev.target.value); };
     sheet.querySelector("#tsBankNew").onclick = function () { openCustomForm(target); };
     sheet.querySelector("#tsBankList").onclick = function (ev) {
+      var stb = ev.target.closest("[data-bsteps]");
+      if (stb) {
+        var sref = stb.getAttribute("data-bsteps");
+        var box = sheet.querySelector('[data-stepsfor="' + cssq(sref) + '"]');
+        if (box) { var open = box.style.display === "none"; box.style.display = open ? "block" : "none"; stb.textContent = open ? "שלבים ▴" : "שלבים ▾"; }
+        return;
+      }
+      var acb = ev.target.closest("[data-baddcat]");
+      if (acb) {
+        var cref = acb.getAttribute("data-baddcat");
+        var panel = sheet.querySelector('[data-catsfor="' + cssq(cref) + '"]');
+        if (panel) panel.style.display = (panel.style.display === "none" ? "flex" : "none");
+        return;
+      }
+      var chip = ev.target.closest("[data-addto]");
+      if (chip) {
+        var gi = parseInt(chip.getAttribute("data-addto"), 10);
+        var pref = chip.getAttribute("data-ref");
+        if (addToCategory(gi, pref)) { chip.classList.add("ts-added"); toast("נוסף לקטגוריה"); }
+        else toast("כבר בקטגוריה");
+        return;
+      }
       var addb = ev.target.closest("[data-badd]");
       if (addb) {
         var ref = addb.getAttribute("data-badd");
