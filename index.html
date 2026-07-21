@@ -160,9 +160,9 @@
   .setrow{display:flex; align-items:center; justify-content:space-between; background:var(--card); border:1px solid var(--line); border-radius:var(--r1); padding:13px 14px; margin-bottom:8px; font-size:14px; font-weight:600; cursor:pointer;}
   .setrow .v{color:var(--muted); font-size:13px;}
 
-  /* ---------- bottom nav (3 tabs) ---------- */
-  nav.tabbar{position:absolute; inset-inline:0; bottom:0; z-index:30; display:flex; justify-content:space-around; padding:9px 6px calc(14px + env(safe-area-inset-bottom)); background:#0b0e13; border-top:1px solid var(--line);}
-  nav.tabbar button{flex:1; background:none; border:none; cursor:pointer; color:var(--muted); display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px; font-weight:800; font-family:var(--sans);}
+  /* ---------- bottom nav (4 tabs) ---------- */
+  nav.tabbar{position:absolute; inset-inline:0; bottom:0; z-index:30; display:flex; justify-content:space-around; padding:9px 4px calc(14px + env(safe-area-inset-bottom)); background:#0b0e13; border-top:1px solid var(--line);}
+  nav.tabbar button{flex:1; min-width:0; background:none; border:none; cursor:pointer; color:var(--muted); display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; font-weight:800; font-family:var(--sans); white-space:nowrap;}
   nav.tabbar svg{width:23px;height:23px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
   nav.tabbar button.active{color:var(--accent);}
 
@@ -267,7 +267,8 @@
   .slot .sn{width:22px;height:22px;border-radius:50%; background:var(--card2); color:var(--muted); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
   .slot .sph{color:var(--muted); font-size:12px; font-style:italic;}
   .slot .snm{font-weight:800; font-size:14px;} .slot .snm small{color:var(--muted); font-weight:500; font-family:var(--jp); margin-inline-start:6px;}
-  .pimg{width:34px;height:34px;background:#f5f5ef;border-radius:6px;padding:2px;flex:0 0 auto;} .pimg svg{width:100%;height:100%;} .pimg img{width:100%;height:100%;object-fit:contain;}
+  .pimg{position:relative;width:34px;height:34px;background:#f5f5ef;border-radius:6px;padding:2px;flex:0 0 auto;} .pimg svg{width:100%;height:100%;} .pimg img{width:100%;height:100%;object-fit:contain;}
+  .pzoom{position:absolute; top:-6px; inset-inline-end:-6px; width:18px;height:18px;border-radius:50%;background:rgba(11,14,19,.82);color:#fff;border:1px solid var(--line2);font-size:10px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;cursor:zoom-in;z-index:2;}
   .pool{display:flex; flex-wrap:wrap; gap:8px;}
   .pcard{display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line2); border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer;}
   .pcard.used{opacity:.3; pointer-events:none;}
@@ -314,17 +315,17 @@
       <div class="split">
         <div class="modecard free" id="trainAll">
           <div class="mt">תרגול כולל</div>
-          <div class="ms">חזרה חכמה על כל חומר הסילבוס — רק טכניקות עם איור/וידאו</div>
+          <div class="ms">תרגול אינסופי על כל הטכניקות עם איור/וידאו — עד שתעצור</div>
         </div>
-        <div class="modecard" id="trainWeak">
-          <div class="mt">נקודות חולשה</div>
-          <div class="ms">קודם מה שאתה יודע פחות</div>
+        <div class="modecard" id="trainShort">
+          <div class="mt">תרגול קצר</div>
+          <div class="ms">5 טכניקות אקראיות מכל הסילבוס</div>
         </div>
       </div>
 
-      <div class="modecard free" id="trainShadow" style="margin-top:10px; border-inline-start-color:var(--selfdef)">
-        <div class="mt">אימון צל · Shadow training</div>
-        <div class="ms">קרא ובצע — הגנה עצמית שלב-אחר-שלב, ללא איורים</div>
+      <div class="modecard free" id="trainTwoSlaps" style="margin-top:10px; border-inline-start-color:var(--selfdef)">
+        <div class="mt">תרגל שתי סתירות</div>
+        <div class="ms">עבור על התרגיל כולו לפי הסדר — קטגוריה אחר קטגוריה, שלב־אחר־שלב</div>
       </div>
 
       <div class="modecard free" id="trainSeries" style="margin-top:10px; border-inline-start-color:var(--accent)">
@@ -393,12 +394,16 @@
       <div class="setrow" id="setBelt">החגורה שלי · My belt <span class="v" id="setBeltV">Green ▾</span></div>
       <div class="setrow" id="setReset" style="color:var(--bad)">איפוס התקדמות · Reset <span class="v" style="color:var(--bad)">›</span></div>
     </section>
+
+    <!-- ===== TWO SLAPS (routines) ===== -->
+    <section class="view" data-view="twoslaps" id="twoslapsView"></section>
   </main>
 
   <nav class="tabbar" id="tabbar">
     <button data-view="train" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>אימון</button>
     <button data-view="library"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>ספרייה</button>
     <button data-view="progress"><svg viewBox="0 0 24 24"><path d="M4 20l4-9 4 5 4-11 4 15"/></svg>התקדמות</button>
+    <button data-view="twoslaps"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>שתי סתירות</button>
   </nav>
 
   <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
@@ -407,6 +412,7 @@
 </div>
 
 <script src="data.js"></script>
+<script src="routines-bank.js"></script>
 <script>
 /* ============================================================================
    Kawaishi Ju-Jitsu — "Coach" UI (faithful port of the approved prototype v3),
@@ -448,7 +454,7 @@ function ytEmbed(id){ return `<div class="vid"><iframe src="https://www.youtube-
 
 /* ---- state (persisted) ---- */
 const LS = "kawaishi_progress_v1";
-const WHATS_NEW_VERSION = "2026-07-coach-2";
+const WHATS_NEW_VERSION = "2026-07-twoslaps";
 function load(){ try{ return JSON.parse(localStorage.getItem(LS)) || {}; }catch(e){ return {}; } }
 function save(){ localStorage.setItem(LS, JSON.stringify(S)); }
 let S = load();
@@ -489,6 +495,7 @@ const TITLES = {
   train:  ()=>[`${greetHe()} 👋`, "בוא נתאמן — חמש דקות והשתפרת"],
   library:()=>["ספריית הטכניקות", "חפש וסנן את כל החומר"],
   progress:()=>["ההתקדמות שלי", `${cap(currentBelt)} belt · המעקב שלך`],
+  twoslaps:()=>["שתי סתירות", "בנה ותרגל"],
 };
 
 /* ---- weekly regime (editable, persisted in S.weekPlan) ---- */
@@ -505,7 +512,23 @@ const FOCUS_KEYS = Object.keys(FOCUS);
 const DEFAULT_PLAN = { 0:"choke_pin", 1:"judo", 2:"breaks", 3:"sd_a", 4:"sd_b", 5:"freestyle", 6:"freestyle" };
 const DLET = ["א","ב","ג","ד","ה","ו","ש"];
 const DAYNAME = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
-function planFor(d){ return (S.weekPlan && S.weekPlan[d]) || DEFAULT_PLAN[d]; }
+/* one-time migration: older versions stored weekPlan values as objects {en,focus,he}
+   instead of string focus keys — that crashed init() (FOCUS[obj].short) on upgrade. */
+(function migrateWeekPlan(){
+  if(!S.weekPlan || typeof S.weekPlan!=="object") return;
+  let changed=false;
+  Object.keys(S.weekPlan).forEach(k=>{
+    let v=S.weekPlan[k];
+    if(v && typeof v==="object"){ S.weekPlan[k]=v.focus; changed=true; }
+    if(!FOCUS[S.weekPlan[k]]){ delete S.weekPlan[k]; changed=true; }
+  });
+  if(changed) save();
+})();
+function planFor(d){
+  let v = S.weekPlan && S.weekPlan[d];
+  if(v && typeof v==="object") v = v.focus;   // guard against legacy object format
+  return FOCUS[v] ? v : DEFAULT_PLAN[d];        // fall back if key missing/unknown
+}
 const todayIdx = new Date().getDay();
 let activeDay = todayIdx;
 
@@ -817,16 +840,12 @@ function openSeriesChooser(){
 
 /* ---- one-time "what's new" popup ---- */
 const WHATS_NEW = [
-  ["🧠","חידון דו-כיווני","לפעמים איור → בחר שם יפני, ולפעמים איור+יפני → בחר עברית"],
-  ["🔗","סדר סדרה","תרגול חדש: סדר את טכניקות הסדרה לפי הסדר — גם מהאימון וגם מהספרייה"],
-  ["🥊","אימון צל להגנה עצמית","קרא ובצע — הגנות בעמידה, שלב אחר שלב"],
-  ["⬆️","חלונות נפתחים מלמעלה","כפתורי סגירה ופעולה תמיד נגישים, בלי לגלול עד הסוף"],
-  ["🖼️","בלי איורי מילוי","טכניקות ללא איור מוצגות נקי, בלי ציור גנרי"],
+  ["🥋","שתי סתירות — תרגילים משלכם","בנו תרגילים משלכם: ארגנו טכניקות לקטגוריות ותרגלו לפי הסדר — את כל התרגיל או טכניקה אחת בכל פעם"],
 ];
 function openWhatsNew(){
   const rows = WHATS_NEW.map(r=>`<div class="wnrow"><span class="wnic">${r[0]}</span><div class="wntx"><b>${r[1]}</b><small>${r[2]}</small></div></div>`).join("");
   $("#sheet").innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
-    <div class="wnhead">מה חדש? 🎉</div><div class="enb">כמה שיפורים גדולים חיכו לך</div>
+    <div class="wnhead">מה חדש? 🎉</div><div class="enb">הכירו את התכונה החדשה</div>
     <div class="wnlist">${rows}</div>
     <button class="cta" id="wnClose" style="margin-top:6px">יאללה, בוא נתאמן ◂</button>`;
   const done=()=>{ S.seenWhatsNew=WHATS_NEW_VERSION; save(); closeModal(); };
@@ -908,6 +927,39 @@ function startTechSession(id){
   sess={ mode:"tech", step:0, qi:0, correct:0, total:1, q:[buildQuestion(id)], answered:false, series:null, order:null, free:true };
   ov.classList.add("on"); renderSession();
 }
+/* full-syllabus pool: every technique with an illustration or video (no variants) */
+function mediaSyllabusIds(){
+  return Object.keys(techById).filter(id=>{ const t=techById[id]; return t && !isVariant(t) && (illusFor(t)||t.y); });
+}
+/* endless MCQ over the whole media syllabus — runs until the user quits */
+function startEndlessSession(){
+  const pool=mediaSyllabusIds();
+  if(!pool.length){ endSession(); return; }
+  sess={ mode:"free", endless:true, step:0, qi:0, correct:0, total:0, pool, q:shuffle(pool).map(buildQuestion), answered:false, series:null, order:null, free:true };
+  ov.classList.add("on"); renderSession();
+}
+/* short practice: 5 random questions from anywhere in the syllabus */
+function startShortSession(){
+  const pool=shuffle(mediaSyllabusIds()).slice(0,5);
+  if(!pool.length){ endSession(); return; }
+  sess={ mode:"free", step:0, qi:0, correct:0, total:pool.length, q:pool.map(buildQuestion), answered:false, series:null, order:null, free:true };
+  ov.classList.add("on"); renderSession();
+}
+/* Two Slaps player: flatten the saved plan into an ordered read-and-do sequence */
+function twoSlapsItems(){
+  if(!window.Routines) return [];
+  const st=window.Routines.load(), items=[];
+  (st.categories||[]).forEach(c=>{ (c.items||[]).forEach(it=>{ const r=window.Routines.resolveRef(it.ref); if(!r) return;
+    if(!r.he && !(r.steps&&r.steps.length)) return;
+    items.push({ he:r.he, romaji:r.romaji, steps:r.steps||[], category:{he:c.title||""}, scenario:null }); }); });
+  return items;
+}
+function startTwoSlapsSession(){
+  const items=twoSlapsItems();
+  if(!items.length){ goto("twoslaps"); return; }
+  sess={ mode:"shadow", playLabel:"שתי סתירות", step:0, si:0, total:items.length, items, correct:0, series:null, free:true };
+  ov.classList.add("on"); renderSession();
+}
 function startShadowSession(items, daily){
   const pool=(items&&items.length)?items:shuffle(K.techniques.selfdef.filter(e=>e.steps&&e.steps.length)).slice(0,5);
   if(!pool.length){ endSession(); return; }
@@ -924,7 +976,7 @@ function startSeriesSession(series){
 }
 function shadowTop(pct){
   return `<div class="sov-top"><button class="x" data-end>×</button><div class="sov-prog"><i style="width:${pct}%"></i></div><div class="sov-count">${sess.si+1}/${sess.total}</div></div>
-    <div class="stepper"><div class="sp ${sess.step<2?'on':'done'}"><span class="n">${sess.step>=2?'✓':'1'}</span>אימון צל</div><div class="sp ${sess.step>=2?'on':''}"><span class="n">★</span>סיום</div></div>`;
+    <div class="stepper"><div class="sp ${sess.step<2?'on':'done'}"><span class="n">${sess.step>=2?'✓':'1'}</span>${sess.playLabel||'אימון צל'}</div><div class="sp ${sess.step>=2?'on':''}"><span class="n">★</span>סיום</div></div>`;
 }
 function renderShadow(){
   const e=sess.items[sess.si], pct=sess.si/sess.total*100;
@@ -957,7 +1009,7 @@ function topHtml(pct,count){ // pct===null hides the progress bar (practice, not
 function renderSession(){ if(sess.mode==="shadow") return sess.step>=2 ? renderDone() : renderShadow(); if(sess.step===0) return renderMCQ(); if(sess.step===1) return renderSeries(); return renderDone(); }
 
 function renderMCQ(){
-  const q=sess.q[sess.qi], t=techById[q.id], pct=sess.qi/sess.total*100, dif=DIF[q.tier];
+  const q=sess.q[sess.qi], t=techById[q.id], pct=sess.endless?null:sess.qi/sess.total*100, dif=DIF[q.tier];
   const img = illusFor(t) ? `<div class="sov-hero"><img src="${illusFor(t)}" alt=""></div>` : "";
   let qLine, hero, optHtml;
   if(q.dir==="jp"){
@@ -970,7 +1022,7 @@ function renderMCQ(){
     optHtml = q.opts.map(o=>{ const oe=techById[o];
       return `<button class="opt" data-opt="${o}"><div class="om">${nameHe(o)||nameR(o)}</div>${(oe&&oe.en)?`<div class="osub">${oe.en}</div>`:""}</button>`; }).join("");
   }
-  ov.innerHTML = `${topHtml(pct,(sess.qi+1)+"/"+sess.total)}
+  ov.innerHTML = `${topHtml(pct, sess.endless?`${sess.qi+1}`:(sess.qi+1)+"/"+sess.total)}
     <div class="difpill ${dif.c}">${dif.t}</div>
     <div class="sov-body">
       <div class="sov-q">${qLine}</div>
@@ -998,9 +1050,9 @@ function answerMCQ(btn,q){
        ${wrongMedia?`<button class="revealbtn" id="revealBtn">הצג איור/וידאו של התשובה ▾</button><div id="revealBox"></div>`:""}`;
   const rb=after.querySelector("#revealBtn");
   if(rb) rb.onclick=()=>{ after.querySelector("#revealBox").innerHTML = t.y?ytEmbed(t.y):(illusFor(t)?`<div class="revealbox"><img src="${illusFor(t)}" alt=""></div>`:""); rb.style.display="none"; };
-  const prog=ov.querySelector(".sov-prog i"); if(prog) prog.style.width=((sess.qi+1)/sess.total*100)+"%";
-  ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="nextQ">${sess.qi+1>=sess.total?"המשך ◂":"הבא ◂"}</button>`;
-  ov.querySelector("#nextQ").onclick=()=>{ sess.qi++; sess.answered=false; if(sess.qi>=sess.total){ sess.step=sess.series?1:2; renderSession(); } else renderMCQ(); };
+  const prog=ov.querySelector(".sov-prog i"); if(!sess.endless && prog) prog.style.width=((sess.qi+1)/sess.total*100)+"%";
+  ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="nextQ">${sess.endless?"הבא ◂":(sess.qi+1>=sess.total?"המשך ◂":"הבא ◂")}</button>`;
+  ov.querySelector("#nextQ").onclick=()=>{ sess.qi++; sess.answered=false; if(sess.endless){ if(sess.qi>=sess.q.length) sess.q.push(...shuffle(sess.pool).map(buildQuestion)); renderMCQ(); return; } if(sess.qi>=sess.total){ sess.step=sess.series?1:2; renderSession(); } else renderMCQ(); };
 }
 function renderSeries(){
   const s=sess.series;
@@ -1008,10 +1060,11 @@ function renderSeries(){
   if(!sess.order){ sess.order = { correct:members, placed:[], pool:shuffle(members.map((_,i)=>i)) }; }
   const st=sess.order;
   const N=members.length;
+  const pimgHtml = t => { const src=illusFor(t); return src ? `<span class="pimg">${heroImg(t)}<button class="pzoom" data-pz="${src}" aria-label="הגדל">⤢</button></span>` : ""; };
   const slots = members.map((_,i)=>{ const mi=st.placed[i]; if(mi==null) return `<div class="slot"><span class="sn">${i+1}</span><span class="sph">מיקום ${i+1}…</span></div>`;
-    const m=members[mi], t=techById[m.techId]; const pi=heroImg(t);
-    return `<div class="slot filled"><span class="sn">${i+1}</span>${pi?`<span class="pimg">${pi}</span>`:""}<span class="snm">${m.he||(t&&t.he)||""}<small>${m.romaji||(t&&t.r)||""}</small></span></div>`; }).join("");
-  const pool = st.pool.map(mi=>{ const m=members[mi], t=techById[m.techId], pi=heroImg(t); return `<div class="pcard ${st.placed.includes(mi)?'used':''}" data-p="${mi}">${pi?`<span class="pimg">${pi}</span>`:""}${m.he||(t&&t.he)||nameR(m.techId)}</div>`; }).join("");
+    const m=members[mi], t=techById[m.techId]; const pi=pimgHtml(t);
+    return `<div class="slot filled"><span class="sn">${i+1}</span>${pi}<span class="snm">${m.he||(t&&t.he)||""}<small>${m.romaji||(t&&t.r)||""}</small></span></div>`; }).join("");
+  const pool = st.pool.map(mi=>{ const m=members[mi], t=techById[m.techId], pi=pimgHtml(t); return `<div class="pcard ${st.placed.includes(mi)?'used':''}" data-p="${mi}">${pi}${m.he||(t&&t.he)||nameR(m.techId)}</div>`; }).join("");
   const seriesTop = sess.mode==="series" ? topHtml(null,`${st.placed.length}/${N}`) : topHtml(100,`${st.placed.length}/${N}`);
   ov.innerHTML = `${seriesTop}
     <div class="sov-body">
@@ -1023,6 +1076,7 @@ function renderSeries(){
     <div class="sov-foot" id="sovFoot"></div>`;
   ov.querySelector("[data-end]").onclick=endSession;
   ov.querySelectorAll(".pcard").forEach(c=>c.onclick=()=>{ if(st.placed.length>=N) return; st.placed.push(+c.dataset.p); renderSeries(); if(st.placed.length===N) checkSeries(); });
+  ov.querySelectorAll(".pzoom").forEach(b=>b.onclick=e=>{ e.stopPropagation(); openLightbox(b.dataset.pz); });
 }
 function checkSeries(){
   const st=sess.order, N=st.correct.length, slots=ov.querySelectorAll("#slots .slot"); let ok=true;
@@ -1038,7 +1092,7 @@ function renderDone(){
   const isShadow=sess.mode==="shadow", isSeries=sess.mode==="series";
   const acc=(isShadow||isSeries)?null:Math.round(sess.correct/sess.total*100);
   const xp=isShadow?sess.total*5:(isSeries?(sess.seriesOk?20:0):(sess.correct*10+(sess.series?20:0)));
-  const line=isShadow?`${sess.total} טכניקות תורגלו בצל`:(isSeries?`הסדרה סודרה${sess.seriesOk?' נכון ✓':''}`:`${sess.correct}/${sess.total} נכונות בפלאשקארד${sess.series?' · הסדרה סודרה':''}`);
+  const line=isShadow?`${sess.total} טכניקות תורגלו${sess.playLabel?'':' בצל'}`:(isSeries?`הסדרה סודרה${sess.seriesOk?' נכון ✓':''}`:`${sess.correct}/${sess.total} נכונות בפלאשקארד${sess.series?' · הסדרה סודרה':''}`);
   const stat3=isShadow?`<div><div class="n">${sess.total}</div><div class="l">תרגולים</div></div>`:(isSeries?`<div><div class="n">${sess.seriesOk?'✓':'—'}</div><div class="l">סדרה</div></div>`:`<div><div class="n">${acc}%</div><div class="l">דיוק</div></div>`);
   ov.innerHTML = `<div class="sov-top"><button class="x" data-end>×</button><div class="sov-prog"><i style="width:100%"></i></div><div class="sov-count">✓</div></div>
     <div class="sov-done"><div class="big">✓</div>
@@ -1065,6 +1119,7 @@ function goto(v){
   document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
   const t=TITLES[v](); $("#htitle").innerHTML=t[0]; $("#hsub").textContent=t[1]; $("main").scrollTop=0;
   if(v==="progress"){ renderProgressBelt(); renderProgressAll(); renderTrack(); renderBadges(); }
+  if(v==="twoslaps" && window.Routines) window.Routines.renderHome();
 }
 function refreshAll(){ renderWeek(); renderSessionCard(); renderWeekBar(); renderFocus(); renderProgressBelt(); renderProgressAll(); renderTrack(); renderBadges(); }
 
@@ -1078,10 +1133,10 @@ function init(){
 
   document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>goto(b.dataset.view));
   $("#startBtn").onclick=startDailySession;
-  $("#trainAll").onclick=()=>startFreeSession("all");
-  $("#trainAll2").onclick=()=>startFreeSession("all");
-  $("#trainWeak").onclick=()=>startFreeSession("weak");
-  $("#trainShadow").onclick=()=>startShadowSession();
+  $("#trainAll").onclick=()=>startEndlessSession();
+  $("#trainAll2").onclick=()=>startEndlessSession();
+  $("#trainShort").onclick=()=>startShortSession();
+  $("#trainTwoSlaps").onclick=()=>startTwoSlapsSession();
   $("#trainSeries").onclick=openSeriesChooser;
   $("#editWeek").onclick=openWeeklyEditor; $("#setWeekly").onclick=openWeeklyEditor;
   $("#beltpill").onclick=toggleBeltMenu; $("#setBelt").onclick=toggleBeltMenu;
@@ -1109,11 +1164,14 @@ function init(){
 
   if(S.seenWhatsNew !== WHATS_NEW_VERSION) setTimeout(openWhatsNew, 350);
 }
+/* expose host engine to the Two Slaps module (routines.js) */
+window.KEngine = { K, techById, illusFor, nameR, nameHe, openLightbox, closeModal, $, dots, ytEmbed };
 init();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration failed:', err)); });
 }
 </script>
+<script src="routines.js"></script>
 </body>
 </html>

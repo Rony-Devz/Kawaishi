@@ -8,7 +8,7 @@
  *   - images + static     -> cache-first with runtime caching.
  */
 
-const VERSION = "v38";
+const VERSION = "v43";
 const PRECACHE = "kawaishi-precache-" + VERSION;
 const RUNTIME = "kawaishi-runtime-" + VERSION;
 
@@ -17,6 +17,8 @@ const PRECACHE_URLS = [
   "./",
   "./index.html",
   "./data.js",
+  "./routines-bank.js",
+  "./routines.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
@@ -99,8 +101,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // data.js -> network-first so curriculum updates appear immediately.
-  if (url.pathname.endsWith("/data.js") || url.pathname.endsWith("data.js")) {
+  // data.js + routines files -> network-first so content/logic updates appear immediately.
+  if (/(?:^|\/)(data|routines-bank|routines)\.js$/.test(url.pathname)) {
     event.respondWith(networkFirst(request));
     return;
   }
