@@ -85,9 +85,16 @@
   .split{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
   .modecard{background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:14px; cursor:pointer; transition:border-color .12s;}
   .modecard:active{border-color:var(--accent);}
-  .modecard.free{border-inline-start:3px solid var(--gold);}
   .modecard .mt{font-size:14px; font-weight:800;} .modecard .ms{font-size:11px; color:var(--muted); margin-top:3px; line-height:1.35;}
-  .week{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:14px; margin-top:12px;}
+  .vtitle{font-size:19px; font-weight:800; margin:2px 0 4px;}
+  .vsub{font-size:12px; color:var(--muted); margin-bottom:6px; line-height:1.5;}
+  .vsec{font-size:12.5px; font-weight:800; color:var(--accent); letter-spacing:.4px; margin:14px 0 6px;}
+  .vgrp{font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin:11px 0 3px;}
+  .vrow{display:flex; align-items:baseline; gap:10px; padding:7px 2px; border-bottom:1px solid var(--line);}
+  .vrow .vr{font-weight:800; font-size:13.5px; color:var(--txt); flex:0 0 42%; direction:ltr; text-align:left;}
+  .vrow .vk{font-size:15px; color:var(--muted); flex:0 0 auto; min-width:22px;}
+  .vrow .vh{font-size:13px; color:var(--muted); flex:1; text-align:right;}
+  .week{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:14px; margin-bottom:14px;}
   .week .bars{display:flex; gap:5px; flex:1;} .week .bar{flex:1; height:22px; border-radius:5px; background:var(--line);} .week .bar.on{background:var(--accent);}
   .week .wt{font-size:12px; color:var(--muted); font-weight:800; white-space:nowrap;}
   .focus{background:var(--card); border:1px solid var(--line); border-radius:var(--r2); padding:4px 14px;}
@@ -300,6 +307,11 @@
         <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg> טבלת הסילבוס · Syllabus <span class="ar">›</span>
       </button>
 
+      <div class="week">
+        <div class="bars" id="weekBars"></div>
+        <div class="wt" id="weekWt"></div>
+      </div>
+
       <div class="weekstrip" id="weekstrip"></div>
 
       <div class="session">
@@ -313,33 +325,27 @@
       <button class="subbtn" id="editWeek"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg> ערוך תוכנית שבועית</button>
 
       <div class="split">
-        <div class="modecard free" id="trainAll">
+        <div class="modecard" id="trainAll">
           <div class="mt">תרגול כולל</div>
-          <div class="ms">תרגול אינסופי על כל הטכניקות עם איור/וידאו — עד שתעצור</div>
+          <div class="ms">תרגול אינסופי על כל הטכניקות עם איור/וידאו</div>
         </div>
         <div class="modecard" id="trainShort">
           <div class="mt">תרגול קצר</div>
           <div class="ms">5 טכניקות אקראיות מכל הסילבוס</div>
         </div>
+        <div class="modecard" id="trainTwoSlaps">
+          <div class="mt">תרגל שתי סתירות</div>
+          <div class="ms">עבור על התרגיל כולו לפי הסדר, שלב־אחר־שלב</div>
+        </div>
+        <div class="modecard" id="trainSeries">
+          <div class="mt">סדר סדרה · Order series</div>
+          <div class="ms">סדר טכניקות של סדרה לפי הסדר הנכון</div>
+        </div>
+        <div class="modecard" id="trainVocab" style="grid-column:1 / -1">
+          <div class="mt">אוצר מילים · Vocabulary</div>
+          <div class="ms">השמות היפניים והשורשים — עיון ותרגול תרגום</div>
+        </div>
       </div>
-
-      <div class="modecard free" id="trainTwoSlaps" style="margin-top:10px; border-inline-start-color:var(--selfdef)">
-        <div class="mt">תרגל שתי סתירות</div>
-        <div class="ms">עבור על התרגיל כולו לפי הסדר — קטגוריה אחר קטגוריה, שלב־אחר־שלב</div>
-      </div>
-
-      <div class="modecard free" id="trainSeries" style="margin-top:10px; border-inline-start-color:var(--accent)">
-        <div class="mt">סדר סדרה · Order series</div>
-        <div class="ms">סדר טכניקות של סדרה לפי הסדר הנכון</div>
-      </div>
-
-      <div class="week">
-        <div class="bars" id="weekBars"></div>
-        <div class="wt" id="weekWt"></div>
-      </div>
-
-      <div class="sec"><span class="pd"></span>מוקדי מיקוד · Focus areas</div>
-      <div class="focus" id="focusList"></div>
     </section>
 
     <!-- ===== LIBRARY ===== -->
@@ -412,6 +418,7 @@
 </div>
 
 <script src="data.js"></script>
+<script src="vocab.js"></script>
 <script src="twoslaps-bank.js"></script>
 <script src="routines-bank.js"></script>
 <script>
@@ -568,8 +575,8 @@ function renderSessionCard(){
   $("#sessTitle").textContent = f.he;
   $("#sessMeta").innerHTML = `<b>~${hasSeries?12:8} דק׳</b> · לפי התוכנית השבועית`;
   let steps;
-  if(isSd){ steps=[{sn:"1",st:"אימון צל",ss:"5 טכניקות"},{sn:"✓",st:"סיכום",ss:"XP"}]; }
-  else { steps=[{sn:"1",st:"פלאשקארד",ss:"5 קלפים"}]; if(hasSeries) steps.push({sn:"2",st:"סדר סדרה",ss:"סדרה"}); steps.push({sn:"✓",st:"סיכום",ss:"XP"}); }
+  if(isSd){ steps=[{sn:"1",st:"תרגום",ss:"5 קלפים"},{sn:"✓",st:"סיכום",ss:"XP"}]; }
+  else { steps=[{sn:"1",st:"פלאשקארד",ss:"5 קלפים"}]; let n=2; if(hasSeries) steps.push({sn:String(n++),st:"סדר סדרה",ss:"סדרה"}); steps.push({sn:String(n++),st:"תרגום",ss:"2 קלפים"}); steps.push({sn:"✓",st:"סיכום",ss:"XP"}); }
   $("#sessPlan").innerHTML = steps.map(s=>`<div class="step"><div class="sn">${s.sn}</div><div class="st">${s.st}</div><div class="ss">${s.ss}</div></div>`).join("");
   $("#startBtn").textContent = isToday?"התחל אימון היום ◂":"התחל אימון (תצוגה) ◂";
 }
@@ -579,10 +586,11 @@ function renderWeekBar(){
   $("#weekWt").innerHTML = `🔥 ${st}`;
 }
 function renderFocus(){
+  const list=$("#focusList"); if(!list) return; // focus-areas section removed from Train
   const belt=currentBelt;
   const outstanding = beltNewIds(belt).map(id=>({id, m:S.mastery[id]||0})).filter(o=>o.m<2 && techById[o.id]).sort((a,b)=>a.m-b.m).slice(0,3);
-  if(!outstanding.length){ $("#focusList").innerHTML = `<div class="empty">כל הכבוד — אין נקודות חולשה פתוחות לחגורה זו ✓</div>`; return; }
-  $("#focusList").innerHTML = outstanding.map(o=>{
+  if(!outstanding.length){ list.innerHTML = `<div class="empty">כל הכבוד — אין נקודות חולשה פתוחות לחגורה זו ✓</div>`; return; }
+  list.innerHTML = outstanding.map(o=>{
     const t=techById[o.id]; const tag = o.m===0 ? "new" : "weak";
     return `<div class="frow" data-tid="${o.id}"><span class="tag ${tag}">${tag==='weak'?'חלש':'חדש'}</span><div class="fn">${nameR(o.id)}<small>${t.he||""}</small></div>${dots(o.m)}</div>`;
   }).join("");
@@ -907,12 +915,14 @@ function pickWeighted(pool, n){
 function isSelfdefFocus(focus){ return focus==="sd_a"||focus==="sd_b"; }
 function startDailySession(){
   const focus=planFor(activeDay);
-  if(isSelfdefFocus(focus)){ startShadowSession(null, true); return; }
+  // self-defense (text-only) days → translation quiz replaces the old shadow drill
+  if(isSelfdefFocus(focus)){ startTranslateDaily(); return; }
   const pool=poolForFocus(focus);
   const deck=pickWeighted(pool,5);
-  if(!deck.length){ startShadowSession(null, true); return; }
+  if(!deck.length){ startTranslateDaily(); return; }
   const series = FOCUS[focus].series ? seriesForFocus(focus) : null;
-  sess={ mode:"daily", step:0, qi:0, correct:0, total:deck.length, q:deck.map(buildQuestion), answered:false, series, order:null, free:false };
+  const tq = buildTranslateQs(2); // low-weight vocab fill-in appended after the flashcards
+  sess={ mode:"daily", step:0, qi:0, correct:0, total:deck.length, q:deck.map(buildQuestion), answered:false, series, order:null, free:false, tq, ti:0, tCorrect:0 };
   ov.classList.add("on"); renderSession();
 }
 function startFreeSession(mode){
@@ -967,6 +977,87 @@ function startShadowSession(items, daily){
   sess={ mode:"shadow", step:0, si:0, total:pool.length, items:pool, correct:0, series:null, free:!daily };
   ov.classList.add("on"); renderSession();
 }
+/* ---- Japanese vocabulary (names + roots) + translation quiz ---- */
+function vocabPool(){
+  const V=window.KAWAISHI_VOCAB; if(!V) return [];
+  const out=[];
+  (V.names||[]).forEach(n=>{ if(n.r&&n.h) out.push({ term:n.r, kanji:(n.j&&n.j!=="—")?n.j:"", answer:n.h, type:"name" }); });
+  (V.roots||[]).forEach(r=>{ if(r.r&&r.he) out.push({ term:r.r, kanji:(r.k&&r.k!=="—")?r.k:"", answer:r.he, type:"root" }); });
+  return out;
+}
+function buildTranslateQ(pool, item){
+  let same=pool.filter(x=>x!==item && x.type===item.type && x.answer!==item.answer);
+  let others=shuffle(same).slice(0,3);
+  if(others.length<3){ const rest=shuffle(pool.filter(x=>x!==item && x.answer!==item.answer && !others.includes(x))); others=others.concat(rest).slice(0,3); }
+  const opts=shuffle([item.answer, ...others.map(o=>o.answer)]);
+  return { term:item.term, kanji:item.kanji, answer:item.answer, opts };
+}
+function buildTranslateQs(n){
+  const pool=vocabPool(); if(pool.length<4) return [];
+  return shuffle(pool.slice()).slice(0,n).map(item=>buildTranslateQ(pool,item));
+}
+function renderTranslate(){
+  const q=sess.tq[sess.ti], pct=sess.noMCQ?sess.ti/sess.tq.length*100:100;
+  const optHtml=q.opts.map((o,i)=>`<button class="opt" data-i="${i}"><div class="om">${o}</div></button>`).join("");
+  ov.innerHTML = `${topHtml(pct, (sess.ti+1)+"/"+sess.tq.length)}
+    <div class="difpill d1">תרגום · Translate</div>
+    <div class="sov-body">
+      <div class="sov-q">מה הפירוש? · בחר את התרגום הנכון</div>
+      <div class="sov-hero"><div class="sov-heroname jp">${q.term}${q.kanji?` <span class="jpf">${q.kanji}</span>`:""}</div></div>
+      <div class="opts">${optHtml}</div>
+      <div id="tAfter"></div>
+    </div>
+    <div class="sov-foot" id="sovFoot"></div>`;
+  ov.querySelector("[data-end]").onclick=endSession;
+  ov.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerTranslate(b,q));
+}
+function answerTranslate(btn,q){
+  if(sess.tAnswered) return; sess.tAnswered=true;
+  const chosen=q.opts[+btn.dataset.i], right=chosen===q.answer;
+  ov.querySelectorAll(".opt").forEach(b=>{ const o=q.opts[+b.dataset.i]; if(o===q.answer)b.classList.add("correct"); else if(b===btn)b.classList.add("wrong"); else b.classList.add("dim"); b.onclick=null; });
+  if(right){ sess.tCorrect=(sess.tCorrect||0)+1; S.xp=(S.xp||0)+5; } else { S.xp=(S.xp||0)+1; }
+  save();
+  ov.querySelector("#tAfter").innerHTML = right
+    ? `<div style="text-align:center;margin-top:14px;color:var(--accent);font-weight:800;">נכון! +5 XP</div>`
+    : `<div style="text-align:center;margin-top:14px;color:var(--bad);font-weight:800;">התשובה: ${q.answer}</div>`;
+  if(sess.noMCQ){ const prog=ov.querySelector(".sov-prog i"); if(prog) prog.style.width=((sess.ti+1)/sess.tq.length*100)+"%"; }
+  ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="tNext">${sess.ti+1>=sess.tq.length?"סיים ◂":"הבא ◂"}</button>`;
+  ov.querySelector("#tNext").onclick=()=>{ sess.ti++; sess.tAnswered=false; if(sess.ti>=sess.tq.length){ sess.step=2; renderSession(); } else renderTranslate(); };
+}
+/* self-defense / empty-media days: translation quiz is the whole session */
+function startTranslateDaily(){
+  const tq=buildTranslateQs(5);
+  if(!tq.length){ endSession(); return; }
+  sess={ mode:"daily", noMCQ:true, step:3, qi:0, correct:0, total:0, q:[], answered:false, series:null, order:null, free:false, tq, ti:0, tCorrect:0 };
+  ov.classList.add("on"); renderSession();
+}
+/* standalone practice launched from the Vocabulary sheet */
+function startTranslatePractice(){
+  const tq=buildTranslateQs(10);
+  if(!tq.length) return;
+  sess={ mode:"daily", noMCQ:true, step:3, qi:0, correct:0, total:0, q:[], answered:false, series:null, order:null, free:true, tq, ti:0, tCorrect:0 };
+  ov.classList.add("on"); renderSession();
+}
+function openVocab(){
+  const V=window.KAWAISHI_VOCAB, sheet=$("#sheet"); if(!V||!sheet) return;
+  const rootBlock=(g,label)=>{ const rs=(V.roots||[]).filter(r=>r.group===g); if(!rs.length) return "";
+    return `<div class="vgrp">${label}</div>`+rs.map(r=>`<div class="vrow"><span class="vr">${r.r}</span><span class="vk">${(r.k&&r.k!=="—")?r.k:""}</span><span class="vh">${r.he}</span></div>`).join(""); };
+  const names=(V.names||[]).map(n=>`<div class="vrow"><span class="vr">${n.r}</span><span class="vk">${(n.j&&n.j!=="—")?n.j:""}</span><span class="vh">${n.h}</span></div>`).join("");
+  sheet.innerHTML = `<button class="closex" data-close>×</button><div style="clear:both"></div>
+    <div class="vtitle">אוצר מילים · Japanese Vocabulary</div>
+    <div class="vsub">שמות הג׳ודו בנויים מאבני בניין: <b>[תואר] + [חלק גוף/כיוון] + [פעולה]</b> — למשל O-soto-gari = גדול + חיצוני + קצירה.</div>
+    <button class="cta" id="vocabPractice" style="width:100%;margin:6px 0 4px">תרגל תרגום ◂</button>
+    <div class="vsec">שורשים · Roots</div>
+    ${rootBlock("action","פעולות")}
+    ${rootBlock("body","חלקי גוף")}
+    ${rootBlock("mod","תארים וכיוונים")}
+    ${rootBlock("special","מונחים מיוחדים")}
+    <div class="vsec">שמות טכניקות · Names</div>
+    ${names}`;
+  sheet.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);
+  sheet.querySelector("#vocabPractice").onclick=()=>{ closeModal(); startTranslatePractice(); };
+  $("#modal").classList.add("open");
+}
 function playableSeries(){ return (K.series||[]).filter(seriesPlayable); }
 function startSeriesSession(series){
   const list=playableSeries();
@@ -998,16 +1089,24 @@ function renderShadow(){
   ov.querySelector("#shNext").onclick=()=>{ S.xp=(S.xp||0)+5; save(); sess.si++; if(sess.si>=sess.total){ sess.step=2; renderSession(); } else renderShadow(); };
 }
 function stepperHtml(){
-  const steps = sess.mode==="series" ? [["סדר סדרה",1],["סיום",2]]
-    : sess.series ? [["פלאשקארד",0],["סדרה",1],["סיום",2]] : [["תרגול",0],["סיום",2]];
-  const last=steps.length-1;
-  return `<div class="stepper">${steps.map((s,idx)=>`<div class="sp ${sess.step===s[1]?'on':sess.step>s[1]?'done':''}"><span class="n">${sess.step>s[1]?'✓':(idx===last?'★':idx+1)}</span>${s[0]}</div>`).join("")}</div>`;
+  let steps;
+  if(sess.mode==="series"){ steps=[["סדר סדרה",1],["סיום",2]]; }
+  else if(sess.noMCQ){ steps=[["תרגום",3],["סיום",2]]; }
+  else {
+    steps=[[sess.series?"פלאשקארד":"תרגול",0]];
+    if(sess.series) steps.push(["סדרה",1]);
+    if(sess.tq&&sess.tq.length) steps.push(["תרגום",3]);
+    steps.push(["סיום",2]);
+  }
+  const cur=steps.findIndex(s=>s[1]===sess.step), last=steps.length-1;
+  return `<div class="stepper">${steps.map((s,idx)=>{ const done=cur>=0&&idx<cur, on=s[1]===sess.step;
+    return `<div class="sp ${on?'on':done?'done':''}"><span class="n">${done?'✓':(idx===last?'★':idx+1)}</span>${s[0]}</div>`; }).join("")}</div>`;
 }
 function topHtml(pct,count){ // pct===null hides the progress bar (practice, not quiz)
   const bar = pct===null ? `<div style="flex:1"></div>` : `<div class="sov-prog"><i style="width:${pct}%"></i></div>`;
   return `<div class="sov-top"><button class="x" data-end>×</button>${bar}${count?`<div class="sov-count">${count}</div>`:""}</div>${stepperHtml()}`;
 }
-function renderSession(){ if(sess.mode==="shadow") return sess.step>=2 ? renderDone() : renderShadow(); if(sess.step===0) return renderMCQ(); if(sess.step===1) return renderSeries(); return renderDone(); }
+function renderSession(){ if(sess.mode==="shadow") return sess.step>=2 ? renderDone() : renderShadow(); if(sess.step===0) return renderMCQ(); if(sess.step===1) return renderSeries(); if(sess.step===3) return renderTranslate(); return renderDone(); }
 
 function renderMCQ(){
   const q=sess.q[sess.qi], t=techById[q.id], pct=sess.endless?null:sess.qi/sess.total*100, dif=DIF[q.tier];
@@ -1053,7 +1152,7 @@ function answerMCQ(btn,q){
   if(rb) rb.onclick=()=>{ after.querySelector("#revealBox").innerHTML = t.y?ytEmbed(t.y):(illusFor(t)?`<div class="revealbox"><img src="${illusFor(t)}" alt=""></div>`:""); rb.style.display="none"; };
   const prog=ov.querySelector(".sov-prog i"); if(!sess.endless && prog) prog.style.width=((sess.qi+1)/sess.total*100)+"%";
   ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="nextQ">${sess.endless?"הבא ◂":(sess.qi+1>=sess.total?"המשך ◂":"הבא ◂")}</button>`;
-  ov.querySelector("#nextQ").onclick=()=>{ sess.qi++; sess.answered=false; if(sess.endless){ if(sess.qi>=sess.q.length) sess.q.push(...shuffle(sess.pool).map(buildQuestion)); renderMCQ(); return; } if(sess.qi>=sess.total){ sess.step=sess.series?1:2; renderSession(); } else renderMCQ(); };
+  ov.querySelector("#nextQ").onclick=()=>{ sess.qi++; sess.answered=false; if(sess.endless){ if(sess.qi>=sess.q.length) sess.q.push(...shuffle(sess.pool).map(buildQuestion)); renderMCQ(); return; } if(sess.qi>=sess.total){ sess.step=sess.series?1:((sess.tq&&sess.tq.length)?3:2); renderSession(); } else renderMCQ(); };
 }
 function renderSeries(){
   const s=sess.series;
@@ -1086,15 +1185,22 @@ function checkSeries(){
   const after=ov.querySelector("#seriesAfter");
   after.innerHTML = `<div style="text-align:center;margin-top:14px;font-weight:800;color:${ok?'var(--accent)':'var(--bad)'}">${ok?'מצוין! הסדר נכון · +20 XP':'כמעט — הסדר הנכון מסומן בירוק'}</div>`;
   ov.querySelector("#sovFoot").innerHTML = `<button class="cta" id="toDone">סיים ◂</button>`;
-  ov.querySelector("#toDone").onclick=()=>{ sess.step=2; renderSession(); };
+  ov.querySelector("#toDone").onclick=()=>{ sess.step=(sess.tq&&sess.tq.length)?3:2; renderSession(); };
 }
 function renderDone(){
   bumpStreak();
   const isShadow=sess.mode==="shadow", isSeries=sess.mode==="series";
-  const acc=(isShadow||isSeries)?null:Math.round(sess.correct/sess.total*100);
-  const xp=isShadow?sess.total*5:(isSeries?(sess.seriesOk?20:0):(sess.correct*10+(sess.series?20:0)));
-  const line=isShadow?`${sess.total} טכניקות תורגלו${sess.playLabel?'':' בצל'}`:(isSeries?`הסדרה סודרה${sess.seriesOk?' נכון ✓':''}`:`${sess.correct}/${sess.total} נכונות בפלאשקארד${sess.series?' · הסדרה סודרה':''}`);
-  const stat3=isShadow?`<div><div class="n">${sess.total}</div><div class="l">תרגולים</div></div>`:(isSeries?`<div><div class="n">${sess.seriesOk?'✓':'—'}</div><div class="l">סדרה</div></div>`:`<div><div class="n">${acc}%</div><div class="l">דיוק</div></div>`);
+  const hasMCQ=(sess.total||0)>0, tTot=(sess.tq&&sess.tq.length)||0;
+  let xp, line, stat3;
+  if(isShadow){ xp=sess.total*5; line=`${sess.total} טכניקות תורגלו${sess.playLabel?'':' בצל'}`; stat3=`<div><div class="n">${sess.total}</div><div class="l">תרגולים</div></div>`; }
+  else if(isSeries){ xp=sess.seriesOk?20:0; line=`הסדרה סודרה${sess.seriesOk?' נכון ✓':''}`; stat3=`<div><div class="n">${sess.seriesOk?'✓':'—'}</div><div class="l">סדרה</div></div>`; }
+  else {
+    const acc=hasMCQ?Math.round(sess.correct/sess.total*100):null;
+    xp=sess.correct*10+(sess.series?20:0)+(sess.tCorrect||0)*5;
+    const parts=[]; if(hasMCQ) parts.push(`${sess.correct}/${sess.total} נכונות בפלאשקארד`); if(sess.series) parts.push('הסדרה סודרה'); if(tTot) parts.push(`${sess.tCorrect||0}/${tTot} בתרגום`);
+    line=parts.join(' · ')||'התרגול הושלם';
+    stat3=hasMCQ?`<div><div class="n">${acc}%</div><div class="l">דיוק</div></div>`:(tTot?`<div><div class="n">${sess.tCorrect||0}/${tTot}</div><div class="l">תרגום</div></div>`:`<div><div class="n">✓</div><div class="l">הושלם</div></div>`);
+  }
   ov.innerHTML = `<div class="sov-top"><button class="x" data-end>×</button><div class="sov-prog"><i style="width:100%"></i></div><div class="sov-count">✓</div></div>
     <div class="sov-done"><div class="big">✓</div>
       <h2>${sess.free?'תרגול הושלם!':'אימון היום הושלם!'}</h2>
@@ -1139,6 +1245,7 @@ function init(){
   $("#trainShort").onclick=()=>startShortSession();
   $("#trainTwoSlaps").onclick=()=>startTwoSlapsSession();
   $("#trainSeries").onclick=openSeriesChooser;
+  $("#trainVocab").onclick=openVocab;
   $("#editWeek").onclick=openWeeklyEditor; $("#setWeekly").onclick=openWeeklyEditor;
   $("#beltpill").onclick=toggleBeltMenu; $("#setBelt").onclick=toggleBeltMenu;
   $("#toMatrix").onclick=openSyllabus; $("#syllTrain").onclick=openSyllabus; $("#syllLib").onclick=openSyllabus;
